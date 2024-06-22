@@ -1,0 +1,8 @@
+<span
+    class="ml-auto border border-gray-300 bg-neutral-50 px-2 md:px-3 py-1 rounded-full text-sm cursor-pointer flex flex-row flex-nowrap items-center hover:bg-gray-700 hover:text-white hover:shadow-sm transition-colors duration-75 ease-in">
+    <ng-content></ng-content>
+    <i
+        *ngIf="hovered"
+        [@widthHover]
+        class="fa-regular fa-times-circle ml-2"></i>
+</span>

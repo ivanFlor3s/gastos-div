@@ -1,0 +1,75 @@
+<nav class="lg:px-16 px-6 bg-white py-3">
+    <div class="flex justify-between items-center">
+        <a href="#" class="flex items-center gap-2">
+            <img
+                src="assets/icon-wallet.svg"
+                height="32"
+                width="32"
+                alt="wallet-icon" />
+            <h1 class="text-xl sm:text-2xl">Dividir gastos</h1>
+        </a>
+
+        <div class="hidden gap-3 sm:flex">
+            <a
+                href="#"
+                class="hover:bg-sky-50 ease-in rounded-md duration-75 px-3 py-2">
+                Home
+            </a>
+            <a
+                href="#"
+                class="hover:bg-sky-50 ease-in rounded-md duration-75 px-3 py-2">
+                Dividir gastos
+            </a>
+            <a
+                href="#"
+                class="hover:bg-sky-50 ease-in rounded-md duration-75 px-3 py-2">
+                About
+            </a>
+            <a
+                href="#"
+                class="hover:bg-sky-50 ease-in rounded-md duration-75 px-3 py-2">
+                Extra
+            </a>
+            <div></div>
+        </div>
+        <app-dropdown>
+            <h1 buttonText>Cuenta</h1>
+            <div>
+                <div class="p-1">
+                    <p class="px-4 py-2 text-sm">
+                        Logueado como
+                        <br />
+                        <span class="fw-bolder">{{ email$ | async }}</span>
+                    </p>
+                </div>
+                <div class="py-1" role="none">
+                    <a
+                        (click)="logout()"
+                        class="text-gray-700 block px-4 py-2 text-sm cursor-pointer"
+                        role="menuitem"
+                        tabindex="-1"
+                        id="menu-item-5">
+                        Logout
+                    </a>
+                </div>
+            </div>
+        </app-dropdown>
+
+        <!-- MOBILE -->
+        <button class="sm:hidden" (click)="toggleMenu()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+    <div
+        *ngIf="showMenu"
+        class="sm:hidden flex flex-col mt-2"
+        appClickOutside
+        (clickOutside)="toggleMenu()">
+        <a href="#" class="text-sm hover:bg-gray-200 py-2 px-4">Home</a>
+        <a href="#" class="text-sm hover:bg-gray-200 py-2 px-4">
+            Dividir gastos
+        </a>
+        <a href="#" class="text-sm hover:bg-gray-200 py-2 px-4">About</a>
+        <a href="#" class="text-sm hover:bg-gray-200 py-2 px-4">Extra</a>
+    </div>
+</nav>

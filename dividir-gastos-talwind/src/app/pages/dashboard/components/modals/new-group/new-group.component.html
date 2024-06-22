@@ -1,0 +1,94 @@
+<div class="p-4 grid grid-cols-1 gap-3">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <ngx-spinner
+            name="newGroup"
+            type="ball-clip-rotate"
+            bdColor="rgba(0, 0, 0, 0.8)"
+            size="medium"
+            color="#fff"
+            [zIndex]="2500"
+            [fullScreen]="false"></ngx-spinner>
+        <div class="grid grid-cols-1 gap-4">
+            <div class="flex justify-between">
+                <h4 class="text-2xl">Nuevo grupo</h4>
+                <button
+                    type="button"
+                    class="fa-regular fa-x text-gray-500 cursor-pointer"
+                    (click)="dismiss()"></button>
+            </div>
+            <div class="flex-1 flex flex-col">
+                <label for="name" class="text-xs mb-1">Nombre</label>
+                <input
+                    class="td-form-control"
+                    placeholder="Nombre del grupo"
+                    id="name"
+                    formControlName="name"
+                    autocomplete="off"
+                    type="text" />
+            </div>
+            <div class="flex-1 flex flex-col">
+                <label for="description" class="text-xs mb-1">
+                    Descripción
+                </label>
+                <textarea
+                    placeholder="Descripción del grupo"
+                    class="td-form-control"
+                    id="description"
+                    formControlName="description"
+                    autocomplete="off"
+                    type="text"></textarea>
+            </div>
+
+            <section id="miembros">
+                <h4 class="text-xl mb-3">Miembros</h4>
+                <div class="grid grid-cols-1 gap-2">
+                    <p>
+                        <span
+                            class="bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
+                            Tú
+                        </span>
+                        {{ currentEmail$ | async }}
+                    </p>
+                    <div
+                        formArrayName="emails"
+                        class="grid grid-cols-1 gap-2 sm:max-w-[250px]">
+                        <div
+                            *ngFor="let item of emails.controls; let i = index"
+                            class="flex flex-row items-center justify-between gap-2">
+                            <div class="flex-1 flex flex-col">
+                                <input
+                                    class="td-form-control"
+                                    placeholder="Email de otro usuario"
+                                    [formControlName]="i"
+                                    autocomplete="off"
+                                    type="text" />
+                            </div>
+                            <i
+                                (click)="removeEmail(i)"
+                                class="text-red-600 fa-regular fa-circle-xmark cursor-pointer"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <button
+                            type="button"
+                            class="rounded-full py-1 px-3 text-gray-600 text-sm bg-gray-100 hover:bg-gray-200 transition-colors duration-200 ease-in-out"
+                            (click)="addEmailInput()">
+                            + Añadir miembro
+                        </button>
+                    </div>
+                </div>
+            </section>
+            <div class="flex flex-row justify-end gap-2">
+                <button
+                    (click)="dismiss()"
+                    type="button"
+                    class="py-2 px-4 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-all ease-in duration-150;">
+                    Cancelar
+                </button>
+                <button type="submit" class="td-btn-primary rounded-lg">
+                    Crear
+                </button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,13 @@
+<div class="relative">
+    <input
+        type="text"
+        class="td-form-control w-100"
+        #filter
+        (keyup.enter)="searchEvent.emit(filter.value)"
+        placeholder="Nombre de grupo" />
+    <button
+        class="absolute top-2 right-2.5 bg-none border-none"
+        (click)="searchEvent.emit(filter.value)">
+        <i class="fa fa-search text-gray-300 hover:text-indigo-700"></i>
+    </button>
+</div>

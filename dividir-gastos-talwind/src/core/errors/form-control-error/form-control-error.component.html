@@ -1,0 +1,10 @@
+<div class="text-red-600 my-1">
+    <ng-container *ngIf="message; else template">
+        <span class="text-sm font-semibold">{{ message }}</span>
+    </ng-container>
+    <ng-template #template>
+        <span class="text-sm font-semibold">{{
+            'Debe tener al menos ' + error['requiredLength'] + ' caracteres'
+        }}</span>
+    </ng-template>
+</div>

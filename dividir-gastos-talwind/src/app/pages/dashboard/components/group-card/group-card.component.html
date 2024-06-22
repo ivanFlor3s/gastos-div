@@ -1,0 +1,22 @@
+<div
+    class="overflow-hidden w-full sm:w-3/4 shadow-sm rounded-xl cursor-pointer hover:bg-indigo-200 hover:scale-[1.01] transition ease-in duration-100 flex bg-white">
+    <div class="shrink-0">
+        <img
+            class="h-48 w-full md:h-full md:w-48"
+            src="https://miscmedia-9gag-fun.9cache.com/images/thumbnail-facebook/1656473044.0987_Y3UVY8_n.jpg"
+            alt="anya" />
+    </div>
+    <div class="flex w-full flex-col p-8">
+        <h3 class="text-indigo-600 font-bold text-lg">{{ group.name }}</h3>
+        <p class="text-sm line-clamp-2">
+            {{ group.description }}
+        </p>
+        <div class="flex flex-row justify-between mt-auto">
+            <span>
+                {{ group.users.length }}
+                {{ group.users.length > 1 ? 'participantes' : 'participante' }}
+            </span>
+            <span>$400</span>
+        </div>
+    </div>
+</div>

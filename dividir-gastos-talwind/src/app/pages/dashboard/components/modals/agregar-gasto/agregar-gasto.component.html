@@ -1,0 +1,79 @@
+<!-- TODO Make a static wave con Concavidad + -->
+<div class="text-center py-2 bg-indigo-500">
+    <h1 class="text-white text-xl">Añadir un gasto</h1>
+</div>
+<div class="container p-6">
+    <div class="flex flex-col space-y-2">
+        <div class="flex flex-row flex-nowrap">
+            <span>Con:</span>
+            <app-users-list [userList]="users" class="ml-1"></app-users-list>
+        </div>
+
+        <hr />
+
+        <div class="flex flex-row flex-nowrap space-x-2">
+            <div class="flex-1 flex flex-col">
+                <label for="target-person" class="text-xs mb-1"
+                    >Descripcion</label
+                >
+                <input
+                    class="td-form-control"
+                    id="target-person"
+                    type="text"
+                    placeholder="Ingrese una breve descripcion"
+                />
+            </div>
+            <div class="flex flex-col">
+                <label for="gasto" class="text-xs mb-1">Gasto</label>
+                <input class="td-form-control" id="gasto" type="number" />
+            </div>
+        </div>
+        <p>Categorias</p>
+        <div>
+            Pagado por
+            <!-- <button
+                class="td-btn-primary rounded-full"
+                (click)="openSelectAuthor()"
+            >
+                Ti
+            </button> -->
+            <div ngbDropdown class="inline">
+                <button
+                    type="button"
+                    class="td-btn-primary rounded-full"
+                    id="dropdownBasic1"
+                    ngbDropdownToggle
+                >
+                    Ti
+                </button>
+                <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button ngbDropdownItem>Action - 1</button>
+                    <button ngbDropdownItem>Another Action</button>
+                    <button ngbDropdownItem>Something else is here</button>
+                </div>
+            </div>
+            y dividido a
+            <button class="td-btn-primary rounded-full">partes iguales</button>
+        </div>
+        <p>Aprox: $___ /persona</p>
+        <div class="flex flex-col">
+            <label for="dp" class="text-xs mb-1">Fecha</label>
+            <div class="input-group">
+                <input
+                    class="td-form-control"
+                    placeholder="yyyy-mm-dd"
+                    name="dp"
+                    ngbDatepicker
+                    #d="ngbDatepicker"
+                />
+                <button
+                    class="td-btn-primary rounded-full bi bi-calendar3"
+                    (click)="d.toggle()"
+                    type="button"
+                >
+                    <i class="fa-regular fa-calendar"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
