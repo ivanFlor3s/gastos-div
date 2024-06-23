@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { NameValue, UserVM } from '@app/models/view-models';
+import { AppState, GroupState } from '@core/state';
+import { Select, Selector, Store } from '@ngxs/store';
+import { Observable, map } from 'rxjs';
 
 @Component({
     selector: 'app-add-spent',
@@ -6,18 +11,55 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./add-spent.component.css'],
 })
 export class AddSpentComponent implements OnInit {
-    /**
-     * TODO
-     * 1. componentizar el badge raro que hice (quierp que en hover se muestre el X times icon para y se ponga negro para al hacer click que se borre)
-     * 1.2 Autocomplete para buscar miembros del grupo
-     * 2. abrir ambos modals aside en el mismo modal
-     * 3. hacer que el modal aside de agregar gasto se cierre cuando se agrega un gasto
-     * 4. hacer el modal aside de dividsion de gasto
-     * 5. Pensar en como hacer los Icons
-     *
-     */
+    @Select(GroupState.usersInDetail) usersInGroup$: Observable<UserVM[]>;
 
-    constructor() {}
+    participants$: Observable<NameValue<string>[]>;
 
-    ngOnInit() {}
+    spentForm = this.fb.group({
+        description: [''],
+        amount: [{} as Number],
+        //date: [''],
+        users: [{} as NameValue<string>[]],
+        by: [''],
+        how: [''],
+    });
+
+    constructor(private fb: FormBuilder, private store: Store) {
+        this.participants$ = this.usersInGroup$.pipe(
+            map((users) => {
+                return users.map((x) => ({
+                    name: `${x.firstName} ${x.lastName}`,
+                    value: x.id,
+                }));
+            })
+        );
+    }
+
+    ngOnInit() {
+        this.spentForm
+            .get('users')
+            ?.setValue([{ name: 'Todos', value: 'all' }]);
+
+        const currentUserId = this.store.selectSnapshot(AppState.userId) || '';
+        this.spentForm.get('by')?.setValue(currentUserId);
+
+        this.initUsersListener();
+    }
+
+    initUsersListener() {
+        this.spentForm.get('users')?.valueChanges.subscribe((value) => {
+            console.log(value);
+            if (value?.length == 0) {
+                const usersInGroup =
+                    this.store
+                        .selectSnapshot(GroupState.usersInDetail)
+                        ?.map((x) => ({
+                            name: `${x.firstName} ${x.lastName}`,
+                            value: x.id,
+                        })) || [];
+
+                this.spentForm.get('users')?.setValue(usersInGroup);
+            }
+        });
+    }
 }

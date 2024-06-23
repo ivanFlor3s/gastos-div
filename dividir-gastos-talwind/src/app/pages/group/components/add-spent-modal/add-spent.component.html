@@ -5,24 +5,12 @@
             type="button"
             class="fa-regular fa-x text-gray-500 cursor-pointer"></button>
     </div>
-    <!-- [formGroup]="form" (ngSubmit)="onSubmit()" -->
-    <form>
+    <form [formGroup]="spentForm">
+        <pre> {{ spentForm.value | json }} </pre>
         <section id="participants">
             <div class="flex flex-row gap-2 items-start">
-                <p class="text-nowrap">
-                    Con
-                    <strong>tu y:</strong>
-                </p>
-                <app-users-list
-                    [userList]="[
-                        'Todos los del grupo',
-                        'franco',
-                        'ivan',
-                        'asddsa',
-                        'franco2',
-                        'ivan3',
-                        'asddsa4'
-                    ]"></app-users-list>
+                <span class="text-nowrap">Con:</span>
+                <app-users-list formControlName="users"></app-users-list>
             </div>
         </section>
         <section id="icon-description-amount" class="mt-3">
@@ -36,19 +24,17 @@
                 </div>
                 <div class="col-span-3 grid grid-cols-1 gap-2">
                     <input
+                        formControlName="amount"
                         class="td-form-control"
                         placeholder="$00.00"
                         min="0"
-                        id="name"
-                        formControlName="name"
                         autocomplete="off"
                         type="number" />
 
                     <input
+                        formControlName="description"
                         class="td-form-control"
                         placeholder="Descripción del gasto"
-                        id="name"
-                        formControlName="name"
                         autocomplete="off"
                         type="text" />
                 </div>
@@ -58,17 +44,13 @@
         <section id="division" class="text-center mt-3">
             <p>
                 Pagado por
-                <button
-                    type="button"
-                    class="inline border py-1 px-2 shadow-sm bg-neutral-50 rounded-full hover:bg-neutral-200 transition-colors ease-in duration-75">
-                    Ti
-                </button>
+                <app-select
+                    [options]="participants$ | async"
+                    formControlName="by"></app-select>
                 y dividido
-                <button
-                    type="button"
-                    class="inline border py-1 px-2 shadow-sm bg-neutral-50 rounded-full hover:bg-neutral-200 transition-colors ease-in duration-75">
-                    En partes iguales
-                </button>
+                <app-select
+                    [options]="[{ name: 'En partes iguales', value: '' }]"
+                    formControlName="how"></app-select>
             </p>
             <p>($0.00 / persona)</p>
         </section>
