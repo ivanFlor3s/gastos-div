@@ -6,11 +6,13 @@ import {
     DropdownComponent,
     NavbarComponent,
     SearchComponent,
+    SelectComponent,
     UsersListComponent,
 } from './components';
 import { ClickOutsideDirective } from './directives';
 
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
     declarations: [
@@ -21,8 +23,9 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
         UsersListComponent,
         CloseableBadgeComponent,
         AvatarComponent,
+        SelectComponent,
     ],
-    imports: [CommonModule, NgbTooltipModule],
+    imports: [CommonModule, NgbTooltipModule, ReactiveFormsModule, FormsModule],
     exports: [
         DropdownComponent,
         NavbarComponent,
@@ -31,6 +34,7 @@ import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
         UsersListComponent,
         CloseableBadgeComponent,
         AvatarComponent,
+        SelectComponent,
     ],
     providers: [],
 })
