@@ -6,22 +6,21 @@
     <div class="flex flex-col space-y-2">
         <div class="flex flex-row flex-nowrap">
             <span>Con:</span>
-            <app-users-list [userList]="users" class="ml-1"></app-users-list>
+            <!-- <app-users-list [userList]="users" class="ml-1"></app-users-list> -->
         </div>
 
         <hr />
 
         <div class="flex flex-row flex-nowrap space-x-2">
             <div class="flex-1 flex flex-col">
-                <label for="target-person" class="text-xs mb-1"
-                    >Descripcion</label
-                >
+                <label for="target-person" class="text-xs mb-1">
+                    Descripcion
+                </label>
                 <input
                     class="td-form-control"
                     id="target-person"
                     type="text"
-                    placeholder="Ingrese una breve descripcion"
-                />
+                    placeholder="Ingrese una breve descripcion" />
             </div>
             <div class="flex flex-col">
                 <label for="gasto" class="text-xs mb-1">Gasto</label>
@@ -42,8 +41,7 @@
                     type="button"
                     class="td-btn-primary rounded-full"
                     id="dropdownBasic1"
-                    ngbDropdownToggle
-                >
+                    ngbDropdownToggle>
                     Ti
                 </button>
                 <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
@@ -64,13 +62,11 @@
                     placeholder="yyyy-mm-dd"
                     name="dp"
                     ngbDatepicker
-                    #d="ngbDatepicker"
-                />
+                    #d="ngbDatepicker" />
                 <button
                     class="td-btn-primary rounded-full bi bi-calendar3"
                     (click)="d.toggle()"
-                    type="button"
-                >
+                    type="button">
                     <i class="fa-regular fa-calendar"></i>
                 </button>
             </div>
