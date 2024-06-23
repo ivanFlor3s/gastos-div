@@ -40,15 +40,18 @@ export class AddSpentComponent implements OnInit {
             .get('users')
             ?.setValue([{ name: 'Todos', value: 'all' }]);
 
-        const currentUserId = this.store.selectSnapshot(AppState.userId) || '';
-        this.spentForm.get('by')?.setValue(currentUserId);
+        this.setCurrentUserInBy();
 
         this.initUsersListener();
     }
 
+    private setCurrentUserInBy() {
+        const currentUserId = this.store.selectSnapshot(AppState.userId) || '';
+        this.spentForm.get('by')?.setValue(currentUserId);
+    }
+
     initUsersListener() {
         this.spentForm.get('users')?.valueChanges.subscribe((value) => {
-            console.log(value);
             if (value?.length == 0) {
                 const usersInGroup =
                     this.store
