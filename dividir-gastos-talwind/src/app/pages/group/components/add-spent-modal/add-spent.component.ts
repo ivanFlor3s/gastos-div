@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { NameValue, UserVM } from '@app/models/view-models';
 import { AppState, GroupState } from '@core/state';
 import { Select, Selector, Store } from '@ngxs/store';
@@ -16,11 +16,14 @@ export class AddSpentComponent implements OnInit {
     participants$: Observable<NameValue<string>[]>;
 
     spentForm = this.fb.group({
-        description: [''],
-        amount: [{} as Number],
+        description: ['', [Validators.required, Validators.maxLength(50)]],
+        amount: [
+            null as Number | null,
+            [Validators.required, Validators.max(1000000)],
+        ],
         //date: [''],
         users: [{} as NameValue<string>[]],
-        by: [''],
+        by: ['', Validators.required],
         how: [''],
     });
 
@@ -64,5 +67,9 @@ export class AddSpentComponent implements OnInit {
                 this.spentForm.get('users')?.setValue(usersInGroup);
             }
         });
+    }
+
+    submit() {
+        console.log(this.spentForm);
     }
 }
