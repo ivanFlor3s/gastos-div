@@ -13,10 +13,7 @@ namespace ApiGastos.Entities
         [MaxLength(50)]
         [Required]
         public string Description { get; set;}
-        [Required]
-        public Boolean IsDeleted { get; set;}
         public GroupUser GroupUser { get; set;}
-        [Required]
         public SpentMode SpentMode { get; set;}
 
     }
