@@ -3,6 +3,7 @@ using System;
 using ApiGastos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiGastos.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240628031052_fixGroupUserSpentLinks")]
+    partial class fixGroupUserSpentLinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -160,13 +163,16 @@ namespace ApiGastos.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("AppUserId")
+                    b.Property<string>("UserId")
                         .HasColumnType("text");
 
                     b.Property<int>("SpentId")
                         .HasColumnType("integer");
 
-                    b.HasKey("GroupId", "AppUserId", "SpentId");
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("GroupId", "UserId", "SpentId");
 
                     b.HasIndex("AppUserId");
 
@@ -381,9 +387,7 @@ namespace ApiGastos.Migrations
                 {
                     b.HasOne("ApiGastos.Entities.AppUser", "AppUser")
                         .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AppUserId");
 
                     b.HasOne("ApiGastos.Entities.Group", "Group")
                         .WithMany("GroupUserSpents")

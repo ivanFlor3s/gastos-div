@@ -20,5 +20,7 @@ namespace ApiGastos.Entities
         public List<GroupUser> GroupUsers { get; set; }
         public List<GroupUserSpent> GroupUserSpents { get; set; }
 
+        public string nuevo { get; set; } = string.Empty;
+
     }
 }
