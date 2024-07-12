@@ -25,6 +25,7 @@ import { SharedModule } from './shared/shared.module';
 import { GroupState } from '@core/state';
 import { environment } from 'src/environments/environment';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
     declarations: [AppComponent, ClickOutsideDirective],
@@ -42,6 +43,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
             developmentMode: !environment.PRODUCTION,
         }),
         NgxsReduxDevtoolsPluginModule.forRoot(),
+        ToastrModule.forRoot({
+            timeOut: 5000,
+            positionClass: 'toast-bottom-right',
+            preventDuplicates: true,
+        }),
         NgxsStoragePluginModule.forRoot({
             key: [AppState],
             storage: StorageOption.LocalStorage,
