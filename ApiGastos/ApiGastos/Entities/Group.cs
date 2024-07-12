@@ -18,9 +18,7 @@ namespace ApiGastos.Entities
         public string ImageUrl { get; set; } = string.Empty;
         
         public List<GroupUser> GroupUsers { get; set; }
-        public List<GroupUserSpent> GroupUserSpents { get; set; }
-
-        public string nuevo { get; set; } = string.Empty;
+        public List<Spent> Spents{ get; set; }
 
     }
 }

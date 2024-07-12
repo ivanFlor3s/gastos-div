@@ -1,5 +1,6 @@
 ﻿using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
+using ApiGastos.Dtos.Spent;
 using ApiGastos.Entities;
 using AutoMapper;
 
@@ -29,6 +30,7 @@ namespace ApiGastos.Utilities
                     dest.Users = context.Mapper.Map<List<AppUserResponse>>(src.GroupUsers);
                 });
             CreateMap<GroupResponse, Group>();
+            CreateMap<AddSpentDto, Spent>();
          
 
         }

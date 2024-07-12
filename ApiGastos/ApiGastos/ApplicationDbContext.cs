@@ -17,7 +17,6 @@ namespace ApiGastos
 
             //Creo llavo primaria compuesta
             modelBuilder.Entity<GroupUser>().HasKey(gu => new { gu.GroupId, gu.AppUserId });
-            modelBuilder.Entity<GroupUserSpent>().HasKey(gus => new { gus.GroupId, gus.UserId, gus.SpendId });
 
             modelBuilder.Entity<Spent>()
                 .Property(e => e.SpentMode)
@@ -59,6 +58,5 @@ namespace ApiGastos
 
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }  
-        public DbSet<GroupUserSpent> GroupUserSpent { get; set; }
     }
 }
