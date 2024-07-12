@@ -3,6 +3,7 @@ using System;
 using ApiGastos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiGastos.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240628031352_fixAppUserSpentLink")]
+    partial class fixAppUserSpentLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,6 +134,10 @@ namespace ApiGastos.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("character varying(30)");
 
+                    b.Property<string>("nuevo")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("Groups");
@@ -149,6 +156,26 @@ namespace ApiGastos.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("GroupUsers");
+                });
+
+            modelBuilder.Entity("ApiGastos.Entities.GroupUserSpent", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("text");
+
+                    b.Property<int>("SpentId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("GroupId", "AppUserId", "SpentId");
+
+                    b.HasIndex("AppUserId");
+
+                    b.HasIndex("SpentId");
+
+                    b.ToTable("GroupUserSpent");
                 });
 
             modelBuilder.Entity("ApiGastos.Entities.Spent", b =>
@@ -174,8 +201,15 @@ namespace ApiGastos.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
-                    b.Property<int>("GroupId")
+                    b.Property<string>("GroupUserAppUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupUserGroupId")
                         .HasColumnType("integer");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<DateTime?>("LastModified")
                         .HasColumnType("timestamp with time zone");
@@ -190,7 +224,7 @@ namespace ApiGastos.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
+                    b.HasIndex("GroupUserGroupId", "GroupUserAppUserId");
 
                     b.ToTable("Spent");
                 });
@@ -346,15 +380,42 @@ namespace ApiGastos.Migrations
                     b.Navigation("Group");
                 });
 
-            modelBuilder.Entity("ApiGastos.Entities.Spent", b =>
+            modelBuilder.Entity("ApiGastos.Entities.GroupUserSpent", b =>
                 {
+                    b.HasOne("ApiGastos.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ApiGastos.Entities.Group", "Group")
-                        .WithMany("Spents")
+                        .WithMany("GroupUserSpents")
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("ApiGastos.Entities.Spent", "Spent")
+                        .WithMany()
+                        .HasForeignKey("SpentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
                     b.Navigation("Group");
+
+                    b.Navigation("Spent");
+                });
+
+            modelBuilder.Entity("ApiGastos.Entities.Spent", b =>
+                {
+                    b.HasOne("ApiGastos.Entities.GroupUser", "GroupUser")
+                        .WithMany()
+                        .HasForeignKey("GroupUserGroupId", "GroupUserAppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("GroupUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -415,9 +476,9 @@ namespace ApiGastos.Migrations
 
             modelBuilder.Entity("ApiGastos.Entities.Group", b =>
                 {
-                    b.Navigation("GroupUsers");
+                    b.Navigation("GroupUserSpents");
 
-                    b.Navigation("Spents");
+                    b.Navigation("GroupUsers");
                 });
 #pragma warning restore 612, 618
         }

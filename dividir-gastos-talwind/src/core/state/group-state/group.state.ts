@@ -64,6 +64,11 @@ export class GroupState {
         return state.detail;
     }
 
+    @Selector()
+    static usersInDetail(state: GroupStateModel) {
+        return state.detail.group?.users;
+    }
+
     constructor(
         private _groupService: GroupsService,
         private _spinner: NgxSpinnerService

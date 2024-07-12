@@ -6,17 +6,24 @@ import { catchError, tap } from 'rxjs';
 import Swal from 'sweetalert2';
 import jwt_decode from 'jwt-decode';
 import { TokenPayload } from '@app/interfaces';
+import { UserVM } from '@app/models/view-models';
+
+const CLAIM_BASE = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims';
+
+export interface AppUserState extends UserVM {
+    fullName: string;
+}
 
 export interface AppStateModel {
     token: string;
     expiration: string;
-    email: string;
+    user: AppUserState | null;
 }
 
 const defaultAppState: AppStateModel = {
     token: '',
     expiration: '',
-    email: '',
+    user: null,
 };
 
 @State<AppStateModel>({
@@ -32,7 +39,12 @@ export class AppState {
 
     @Selector()
     static email(state: AppStateModel) {
-        return state.email;
+        return state.user?.email;
+    }
+
+    @Selector()
+    static userId(state: AppStateModel) {
+        return state.user?.id;
     }
 
     constructor(private _authService: AuthService) {}
@@ -51,8 +63,22 @@ export class AppState {
             tap({
                 next(res) {
                     const { token, expiration } = res;
-                    const { email } = jwt_decode(token) as TokenPayload;
-                    ctx.patchState({ token, expiration, email });
+                    const tokenDecoded = jwt_decode(token) as any;
+                    console.log(tokenDecoded);
+
+                    ctx.patchState({
+                        token,
+                        expiration,
+                        user: {
+                            id: tokenDecoded[`${CLAIM_BASE}/nameidentifier`],
+                            email: tokenDecoded[`${CLAIM_BASE}/emailaddress`],
+                            firstName: tokenDecoded[`${CLAIM_BASE}/name`],
+                            lastName: tokenDecoded[`${CLAIM_BASE}/surname`],
+                            fullName: `${tokenDecoded[`${CLAIM_BASE}/name`]} ${
+                                tokenDecoded[`${CLAIM_BASE}/surname`]
+                            }`,
+                        },
+                    });
                 },
                 error(err) {
                     Swal.fire({
