@@ -81,6 +81,11 @@ export class AddSpentComponent implements OnInit {
     }
 
     submit() {
+        if (this.spentForm.invalid) {
+            this._toastr.error('Formulario invalido', '🤔');
+            return;
+        }
+
         const groupId = this.store.selectSnapshot(GroupState.detail)?.group
             ?.id as number;
         const body: AddSpentDto = {

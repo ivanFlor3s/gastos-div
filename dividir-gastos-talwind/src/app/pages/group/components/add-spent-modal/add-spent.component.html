@@ -14,14 +14,20 @@
         </section>
         <section id="icon-description-amount" class="mt-3">
             <div class="grid grid-cols-1 gap-2">
-                <input
-                    formControlName="amount"
-                    class="td-form-control"
-                    placeholder="$00.00"
-                    min="0"
-                    max="999999999"
-                    autocomplete="off"
-                    type="number" />
+                <div class="relative mt-2 rounded-md">
+                    <div
+                        class="pointer-events-none absolute inset-y-0 top-2 left-0 pl-3">
+                        <span class="text-gray-500 sm:text-sm">💲</span>
+                    </div>
+                    <input
+                        placeholder="00.00"
+                        min="0"
+                        max="999999999"
+                        formControlName="amount"
+                        autocomplete="off"
+                        type="number"
+                        class="td-form-control w-full pl-7 pr-20" />
+                </div>
 
                 <input
                     formControlName="description"
