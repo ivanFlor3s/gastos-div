@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { AddSpentDto } from '@app/models/dtos';
+import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
+import { SpentsService } from '@core/services';
 import { AppState, GroupState } from '@core/state';
 import { Select, Selector, Store } from '@ngxs/store';
 import { Observable, map } from 'rxjs';
@@ -15,7 +18,7 @@ export class AddSpentComponent implements OnInit {
 
     participants$: Observable<NameValue<string>[]>;
 
-    spentForm = this.fb.group({
+    spentForm = this.fb.nonNullable.group({
         description: ['', [Validators.required, Validators.maxLength(50)]],
         amount: [
             null as Number | null,
@@ -27,7 +30,11 @@ export class AddSpentComponent implements OnInit {
         how: [''],
     });
 
-    constructor(private fb: FormBuilder, private store: Store) {
+    constructor(
+        private fb: FormBuilder,
+        private store: Store,
+        private _spentService: SpentsService
+    ) {
         this.participants$ = this.usersInGroup$.pipe(
             map((users) => {
                 return users.map((x) => ({
@@ -71,5 +78,19 @@ export class AddSpentComponent implements OnInit {
 
     submit() {
         console.log(this.spentForm);
+        const groupId = this.store.selectSnapshot(GroupState.detail)?.group
+            ?.id as number;
+        const body: AddSpentDto = {
+            amount: this.spentForm.get('amount')?.value as number,
+            description: this.spentForm.get('description')?.value as string,
+            users: this.spentForm.get('users')?.value as NameValue<string>[],
+            by: this.spentForm.get('by')?.value as string,
+            how: SpentMode.EQUALLY,
+            groupId,
+        };
+
+        this._spentService.addSpent(body).subscribe((x) => {
+            console.log(x);
+        });
     }
 }
