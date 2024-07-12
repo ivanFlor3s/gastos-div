@@ -28,7 +28,7 @@ export class GroupContainerComponent implements OnInit {
     }
 
     openSpentModal() {
-        this.modalService.open(AddSpentComponent);
+        const modalRef = this.modalService.open(AddSpentComponent);
     }
 
     ngOnInit() {}

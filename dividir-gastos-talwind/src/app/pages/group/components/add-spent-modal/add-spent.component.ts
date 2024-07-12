@@ -5,8 +5,10 @@ import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
 import { SpentsService } from '@core/services';
 import { AppState, GroupState } from '@core/state';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Select, Selector, Store } from '@ngxs/store';
-import { Observable, map } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
+import { Observable, map, take } from 'rxjs';
 
 @Component({
     selector: 'app-add-spent',
@@ -22,7 +24,7 @@ export class AddSpentComponent implements OnInit {
         description: ['', [Validators.required, Validators.maxLength(50)]],
         amount: [
             null as Number | null,
-            [Validators.required, Validators.max(1000000)],
+            [Validators.required, Validators.max(10000000)],
         ],
         //date: [''],
         users: [{} as NameValue<string>[]],
@@ -33,7 +35,9 @@ export class AddSpentComponent implements OnInit {
     constructor(
         private fb: FormBuilder,
         private store: Store,
-        private _spentService: SpentsService
+        private _spentService: SpentsService,
+        private _activeModal: NgbActiveModal,
+        private _toastr: ToastrService
     ) {
         this.participants$ = this.usersInGroup$.pipe(
             map((users) => {
@@ -77,7 +81,6 @@ export class AddSpentComponent implements OnInit {
     }
 
     submit() {
-        console.log(this.spentForm);
         const groupId = this.store.selectSnapshot(GroupState.detail)?.group
             ?.id as number;
         const body: AddSpentDto = {
@@ -89,8 +92,12 @@ export class AddSpentComponent implements OnInit {
             groupId,
         };
 
-        this._spentService.addSpent(body).subscribe((x) => {
-            console.log(x);
-        });
+        this._spentService
+            .addSpent(body)
+            .pipe(take(1))
+            .subscribe((x) => {
+                this._toastr.success('Gasto agregado', '👍');
+                this._activeModal.close();
+            });
     }
 }
