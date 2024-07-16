@@ -1,3 +1,4 @@
+import { SpentItem } from '../dtos';
 import { UserVM } from './user.vm';
 
 export interface GroupVM {
@@ -7,4 +8,5 @@ export interface GroupVM {
     createdAt: string;
     imageUrl: string;
     users: UserVM[];
+    spents: SpentItem[];
 }

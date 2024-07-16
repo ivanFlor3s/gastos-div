@@ -33,8 +33,6 @@ const defaultState: GroupStateModel = {
     groups: [],
     detail: {
         group: null,
-        spents: [],
-        liquidaciones: [],
     },
     error: {
         show: false,
