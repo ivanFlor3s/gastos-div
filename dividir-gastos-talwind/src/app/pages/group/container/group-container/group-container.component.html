@@ -55,12 +55,11 @@
                 </div>
             </section>
 
-            <app-item-detail
-                class="border-b-2 border-neutral-50"></app-item-detail>
-            <app-item-detail
-                class="border-b-2 border-neutral-50"></app-item-detail>
-            <app-item-detail
-                class="border-b-2 border-neutral-50"></app-item-detail>
+            <ng-container *ngFor="let item of detail.group?.spents">
+                <app-item-detail
+                    [spent]="item"
+                    class="border-b-2 border-neutral-50"></app-item-detail>
+            </ng-container>
         </section>
     </ng-template>
 </div>
