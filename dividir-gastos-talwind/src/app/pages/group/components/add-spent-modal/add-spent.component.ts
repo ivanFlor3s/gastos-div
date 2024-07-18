@@ -28,7 +28,7 @@ export class AddSpentComponent implements OnInit {
         ],
         //date: [''],
         users: [{} as NameValue<string>[]],
-        author: ['', Validators.required],
+        author: [{} as NameValue<string>, Validators.required],
         how: [''],
     });
 
@@ -61,7 +61,11 @@ export class AddSpentComponent implements OnInit {
 
     private setCurrentUserInBy() {
         const currentUserId = this.store.selectSnapshot(AppState.userId) || '';
-        this.spentForm.get('author')?.setValue(currentUserId);
+        const userFullName =
+            this.store.selectSnapshot(AppState.userFullName) || '';
+        this.spentForm
+            .get('author')
+            ?.setValue({ name: userFullName, value: currentUserId });
     }
 
     initUsersListener() {
@@ -92,7 +96,7 @@ export class AddSpentComponent implements OnInit {
             amount: this.spentForm.get('amount')?.value as number,
             description: this.spentForm.get('description')?.value as string,
             users: this.spentForm.get('users')?.value as NameValue<string>[],
-            authorId: this.spentForm.get('author')?.value as string,
+            authorId: this.spentForm.get('author')?.value.value as string,
             how: SpentMode.EQUALLY,
             //TODO PROGRAMABLE
             payedAt: new Date(),

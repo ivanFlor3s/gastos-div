@@ -47,6 +47,11 @@ export class AppState {
         return state.user?.id;
     }
 
+    @Selector()
+    static userFullName(state: AppStateModel) {
+        return state.user?.fullName;
+    }
+
     constructor(private _authService: AuthService) {}
 
     @Action(Login)

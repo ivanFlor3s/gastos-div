@@ -1,12 +1,14 @@
 <div class="grid grid-cols-12 gap-2 px-3 py-2">
     <section id="date" class="my-auto col-span-1">
         <div class="text-gray-400">
-            <div class="grid grid-cols-1 gap-0 content-center text-center">
+            <div
+                class="grid grid-cols-1 gap-0 content-center text-center"
+                [ngbTooltip]="spent.payedAt | date : 'medium'">
                 <p class="text-xs leading-none">
-                    {{ spent.createdAt | date : 'MMM' | uppercase }}
+                    {{ spent.payedAt | date : 'MMM' | uppercase }}
                 </p>
                 <p class="text-xl leading-none">
-                    {{ spent.createdAt | date : 'dd' }}
+                    {{ spent.payedAt | date : 'dd' }}
                 </p>
             </div>
         </div>
@@ -19,7 +21,17 @@
     </section>
     <section id="payer" class="my-auto col-span-2">
         <div class="grid grid-cols-1">
-            <p class="text-xs text-gray-400">pagaste</p>
+            <p class="text-xs text-gray-400">
+                <ng-container *ngIf="iPaid; else otherPlayed">
+                    pagaste
+                </ng-container>
+                <ng-template #otherPlayed>
+                    <strong>
+                        {{ spent.author.firstName }} {{ spent.author.lastName }}
+                    </strong>
+                    pagó
+                </ng-template>
+            </p>
             <p class="text-lg">{{ spent.amount | currency }}</p>
         </div>
     </section>
