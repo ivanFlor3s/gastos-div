@@ -16,10 +16,10 @@ namespace ApiGastos.Dtos.Spent
         public List<NameValue<string>> Users { get; set; }
         [Required]
         public SpentMode How { get; set; }
-        
         [Required]
-        public string By { get; set; }  
-
+        public string AuthorId { get; set; }
+        [Required]
+        public DateTime PayedAt { get; set; }
         [Required]
         public int GroupId { get; set; }
         
