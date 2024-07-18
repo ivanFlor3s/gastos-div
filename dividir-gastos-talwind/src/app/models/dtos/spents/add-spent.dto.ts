@@ -5,7 +5,8 @@ export interface AddSpentDto {
     amount: number;
     description: string;
     users: NameValue<string>[];
-    by: string;
+    authorId: string;
     how: SpentMode;
     groupId: number;
+    payedAt: Date;
 }
