@@ -29,7 +29,7 @@ export class AddSpentComponent implements OnInit {
         //date: [''],
         users: [{} as NameValue<string>[]],
         author: [{} as NameValue<string>, Validators.required],
-        how: [''],
+        how: [{ name: 'Todos', value: '' } as NameValue<string>],
     });
 
     constructor(
