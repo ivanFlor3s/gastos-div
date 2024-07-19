@@ -29,8 +29,8 @@ export class SelectComponent implements ControlValueAccessor {
 
     value: NameValue<string> | null;
 
-    writeValue(key: string): void {
-        this.value = this.options?.find((x) => x.value === key) || null;
+    writeValue(val: NameValue<string>): void {
+        this.value = this.options?.find((x) => x.value === val.value) || null;
     }
     registerOnChange(fn: any): void {
         this.onChange = fn;
