@@ -7,6 +7,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SharedModule } from '@app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorsModule } from '@core/errors/errors.module';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
     imports: [
@@ -16,6 +17,7 @@ import { ErrorsModule } from '@core/errors/errors.module';
         SharedModule,
         ReactiveFormsModule,
         FormsModule,
+        NgbDatepickerModule,
         ErrorsModule.forRoot({
             required: 'Este campo es requerido',
             maxLength: 'El texto es demasiado largo',

@@ -36,6 +36,19 @@
                     autocomplete="off"
                     [maxLength]="50"
                     type="text" />
+
+                <div class="input-group">
+                    <input
+                        class="td-form-control"
+                        placeholder="dd/mm/yyyy"
+                        formControlName="payedAt"
+                        ngbDatepicker
+                        #d="ngbDatepicker" />
+                    <button
+                        class="td-btn-primary fa-regular fa-calendar-alt"
+                        (click)="d.toggle()"
+                        type="button"></button>
+                </div>
             </div>
         </section>
 
@@ -63,5 +76,7 @@
                 Crear
             </button>
         </section>
+
+        <pre *ngIf="spentForm">{{ spentForm.value | json }}</pre>
     </form>
 </div>

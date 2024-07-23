@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AddSpentDto } from '@app/models/dtos';
 import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
+import { CustomDateParserFormatter } from '@core/adapters';
 import { SpentsService } from '@core/services';
 import { AppState, GroupState } from '@core/state';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Mapper } from '@core/utils';
+import {
+    NgbActiveModal,
+    NgbCalendar,
+    NgbDateParserFormatter,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Select, Selector, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, take } from 'rxjs';
@@ -14,11 +20,19 @@ import { Observable, map, take } from 'rxjs';
     selector: 'app-add-spent',
     templateUrl: './add-spent.component.html',
     styleUrls: ['./add-spent.component.css'],
+    providers: [
+        {
+            provide: NgbDateParserFormatter,
+            useClass: CustomDateParserFormatter,
+        },
+    ],
 })
 export class AddSpentComponent implements OnInit {
     @Select(GroupState.usersInDetail) usersInGroup$: Observable<UserVM[]>;
 
     participants$: Observable<NameValue<string>[]>;
+
+    private _ngCalendar = inject(NgbCalendar);
 
     spentForm = this.fb.nonNullable.group({
         description: ['', [Validators.required, Validators.maxLength(50)]],
@@ -26,7 +40,7 @@ export class AddSpentComponent implements OnInit {
             null as Number | null,
             [Validators.required, Validators.max(10000000)],
         ],
-        //date: [''],
+        payedAt: [this._ngCalendar.getToday(), Validators.required],
         users: [{} as NameValue<string>[]],
         author: [{} as NameValue<string>, Validators.required],
         how: [{ name: 'Todos', value: '' } as NameValue<string>],
@@ -98,8 +112,7 @@ export class AddSpentComponent implements OnInit {
             users: this.spentForm.get('users')?.value as NameValue<string>[],
             authorId: this.spentForm.get('author')?.value.value as string,
             how: SpentMode.EQUALLY,
-            //TODO PROGRAMABLE
-            payedAt: new Date(),
+            payedAt: Mapper.mapDate(this.spentForm.get('payedAt')?.value),
             groupId,
         };
 
