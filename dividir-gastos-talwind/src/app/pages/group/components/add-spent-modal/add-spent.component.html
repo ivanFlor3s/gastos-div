@@ -3,7 +3,8 @@
         <h4 class="text-2xl">Añadir un gasto</h4>
         <button
             type="button"
-            class="fa-regular fa-x text-gray-500 cursor-pointer"></button>
+            class="fa-regular fa-x text-gray-500 cursor-pointer"
+            (click)="activeModal.dismiss()"></button>
     </div>
     <form [formGroup]="spentForm" (ngSubmit)="submit()">
         <section id="participants">
@@ -63,11 +64,12 @@
                     [options]="[{ name: 'En partes iguales', value: '' }]"
                     formControlName="how"></app-select>
             </p>
-            <p>($0.00 / persona)</p>
+            <!-- <p>($0.00 / persona)</p> -->
         </section>
 
         <section id="buttons" class="mt-3 flex flex-row justify-end gap-2">
             <button
+                (click)="activeModal.dismiss()"
                 type="button"
                 class="py-2 px-4 font-semibold rounded-lg shadow-md hover:bg-gray-100 transition-all ease-in duration-150;">
                 Cancelar
@@ -76,7 +78,5 @@
                 Crear
             </button>
         </section>
-
-        <pre *ngIf="spentForm">{{ spentForm.value | json }}</pre>
     </form>
 </div>

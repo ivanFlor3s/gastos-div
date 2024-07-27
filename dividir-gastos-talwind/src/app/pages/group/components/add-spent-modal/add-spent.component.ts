@@ -50,7 +50,7 @@ export class AddSpentComponent implements OnInit {
         private fb: FormBuilder,
         private store: Store,
         private _spentService: SpentsService,
-        private _activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private _toastr: ToastrService
     ) {
         this.participants$ = this.usersInGroup$.pipe(
@@ -121,7 +121,7 @@ export class AddSpentComponent implements OnInit {
             .pipe(take(1))
             .subscribe((x) => {
                 this._toastr.success('Gasto agregado', '👍');
-                this._activeModal.close();
+                this.activeModal.close();
             });
     }
 }
