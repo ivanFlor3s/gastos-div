@@ -5,7 +5,7 @@ import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
 import { CustomDateParserFormatter } from '@core/adapters';
 import { SpentsService } from '@core/services';
-import { AppState, GroupState } from '@core/state';
+import { AppState, GroupState, StartAddSpent } from '@core/state';
 import { Mapper } from '@core/utils';
 import {
     NgbActiveModal,
@@ -116,11 +116,10 @@ export class AddSpentComponent implements OnInit {
             groupId,
         };
 
-        this._spentService
-            .addSpent(body)
+        this.store
+            .dispatch(new StartAddSpent(body))
             .pipe(take(1))
-            .subscribe((x) => {
-                this._toastr.success('Gasto agregado', '👍');
+            .subscribe(() => {
                 this.activeModal.close();
             });
     }

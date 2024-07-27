@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { GroupVM } from '@app/models/view-models';
-import { GroupsService } from '@core/services';
+import { GroupsService, SpentsService } from '@core/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
     AddGroup,
     SetErrorInGroupDetail,
+    StartAddSpent,
     StartCreatingGroups,
     StartGettingGroup,
     StartGettingGroups,
@@ -14,6 +15,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
+import { ToastrService } from 'ngx-toastr';
+import { SpentItem } from '@app/models/dtos';
 
 export interface GroupStateModel {
     groups: GroupVM[];
@@ -33,6 +36,7 @@ const defaultState: GroupStateModel = {
     groups: [],
     detail: {
         group: null,
+        spents: [],
     },
     error: {
         show: false,
@@ -67,9 +71,16 @@ export class GroupState {
         return state.detail.group?.users;
     }
 
+    @Selector()
+    static spentsInDetail(state: GroupStateModel) {
+        return state.detail?.spents || [];
+    }
+
     constructor(
         private _groupService: GroupsService,
-        private _spinner: NgxSpinnerService
+        private _spentService: SpentsService,
+        private _spinner: NgxSpinnerService,
+        private _toastr: ToastrService
     ) {}
 
     @Action(StartGettingGroups)
@@ -125,6 +136,7 @@ export class GroupState {
                         detail: {
                             ...ctx.getState().detail,
                             group: res,
+                            spents: res.spents || [],
                         },
                         error: { message: '', show: false, type: null },
                     });
@@ -175,5 +187,19 @@ export class GroupState {
         ctx.patchState({
             error,
         });
+    }
+
+    @Action(StartAddSpent)
+    addSpent(ctx: StateContext<GroupStateModel>, { body }: StartAddSpent) {
+        return this._spentService.addSpent(body).pipe(
+            take(1),
+            // finalize(() => this._spinner.hide('addSpent'))
+            tap((_) => {
+                const groupDetail = ctx.getState().detail.group;
+                if (!groupDetail) return;
+                this._toastr.success('Gasto agregado', '🎉');
+                ctx.dispatch(new StartGettingGroup(groupDetail.id));
+            })
+        );
     }
 }

@@ -1,7 +1,7 @@
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 export class Mapper {
-    static mapDate(date?: NgbDate): Date {
+    public static mapDate(date?: NgbDate): Date {
         if (!date) {
             throw new Error('Date is required');
         }

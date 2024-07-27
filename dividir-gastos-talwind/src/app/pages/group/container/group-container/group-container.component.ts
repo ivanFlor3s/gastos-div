@@ -6,6 +6,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddSpentComponent } from '../../components';
+import { SpentItem } from '@app/models/dtos';
 
 @Component({
     selector: 'app-group-container',
@@ -15,6 +16,7 @@ import { AddSpentComponent } from '../../components';
 export class GroupContainerComponent implements OnInit {
     @Select(GroupState.error) error$: Observable<GettingGroupError>;
     @Select(GroupState.detail) groupDetail$: Observable<GroupDetail>;
+    @Select(GroupState.spentsInDetail) spents$: Observable<SpentItem[]>;
 
     constructor(
         private store: Store,

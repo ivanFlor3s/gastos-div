@@ -55,7 +55,7 @@
                 </div>
             </section>
 
-            <ng-container *ngFor="let item of detail.group?.spents">
+            <ng-container *ngFor="let item of spents$ | async">
                 <app-item-detail
                     [spent]="item"
                     class="border-b-2 border-neutral-50"></app-item-detail>
