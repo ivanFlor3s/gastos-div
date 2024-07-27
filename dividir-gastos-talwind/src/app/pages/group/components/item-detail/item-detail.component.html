@@ -18,15 +18,16 @@
             <h3 class="text-xl">{{ spent.description }}</h3>
         </div>
     </section>
-    <section id="prestador" class="my-auto col-span-2">
-        <!-- <div class="grid grid-cols-1">
-            <p class="text-xs text-gray-400">prestaste</p>
-            <p class="text-lg text-emerald-500">$4000.00</p>
-        </div> -->
-    </section>
-    <section id="payer" class="my-auto col-span-2">
+
+    <section id="payer" class="my-auto col-span-3">
         <div class="grid grid-cols-1">
             <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
+        </div>
+    </section>
+    <section id="menu" class="my-auto col-span-1">
+        <div class="flex flex-row gap-3 text-slate-600">
+            <i class="fa-regular fa-edit" ngbTooltip="Editar"></i>
+            <i class="fa-regular fa-trash-alt" ngbTooltip="Remover"></i>
         </div>
     </section>
 </div>
@@ -41,9 +42,13 @@
             {{ spent.description }}
         </p>
     </div>
-    <p class="text-xs items-baseline justify-end flex flex-row w-full gap-2">
+    <div class="flex flex-row justify-between items-center mt-2">
         <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
-    </p>
+        <div class="flex flex-row gap-3 text-slate-600">
+            <i class="fa-regular fa-edit" ngbTooltip="Editar"></i>
+            <i class="fa-regular fa-trash-alt" ngbTooltip="Remover"></i>
+        </div>
+    </div>
 </div>
 
 <ng-template #spentAuthor>
@@ -55,6 +60,9 @@
             </strong>
             pagó
         </ng-template>
+        <br />
+        <span class="text-lg text-emerald-900 font-semibold">
+            {{ spent.amount | currency }}
+        </span>
     </p>
-    <p class="text-lg font-semibold">{{ spent.amount | currency }}</p>
 </ng-template>
