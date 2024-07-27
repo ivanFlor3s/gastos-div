@@ -33,6 +33,7 @@ namespace ApiGastos.Controllers
             var groups = await this.context.Groups
                 .Include(groupDb => groupDb.GroupUsers)
                 .ThenInclude(groupUserDb => groupUserDb.AppUser)
+                .Include(group => group.Spents)
                 .ToListAsync();
             return mapper.Map<List<GroupResponse>>(groups);   
         }
@@ -44,6 +45,9 @@ namespace ApiGastos.Controllers
             var group = await this.context.Groups
                 .Include(groupDb => groupDb.GroupUsers)
                 .ThenInclude(groupUserDb => groupUserDb.AppUser)
+                .Include(group => group.Spents)
+                .ThenInclude(spents => spents.Author)
+                .OrderByDescending(group => group.CreatedAt)
                 .FirstOrDefaultAsync(groupDb => groupDb.Id == id);
 
             var result = mapper.Map<GroupResponse>(group);

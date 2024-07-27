@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AddSpentDto } from '@app/models/dtos';
 import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
+import { CustomDateParserFormatter } from '@core/adapters';
 import { SpentsService } from '@core/services';
 import { AppState, GroupState } from '@core/state';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Mapper } from '@core/utils';
+import {
+    NgbActiveModal,
+    NgbCalendar,
+    NgbDateParserFormatter,
+} from '@ng-bootstrap/ng-bootstrap';
 import { Select, Selector, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, take } from 'rxjs';
@@ -14,11 +20,19 @@ import { Observable, map, take } from 'rxjs';
     selector: 'app-add-spent',
     templateUrl: './add-spent.component.html',
     styleUrls: ['./add-spent.component.css'],
+    providers: [
+        {
+            provide: NgbDateParserFormatter,
+            useClass: CustomDateParserFormatter,
+        },
+    ],
 })
 export class AddSpentComponent implements OnInit {
     @Select(GroupState.usersInDetail) usersInGroup$: Observable<UserVM[]>;
 
     participants$: Observable<NameValue<string>[]>;
+
+    private _ngCalendar = inject(NgbCalendar);
 
     spentForm = this.fb.nonNullable.group({
         description: ['', [Validators.required, Validators.maxLength(50)]],
@@ -26,17 +40,17 @@ export class AddSpentComponent implements OnInit {
             null as Number | null,
             [Validators.required, Validators.max(10000000)],
         ],
-        //date: [''],
+        payedAt: [this._ngCalendar.getToday(), Validators.required],
         users: [{} as NameValue<string>[]],
-        by: ['', Validators.required],
-        how: [''],
+        author: [{} as NameValue<string>, Validators.required],
+        how: [{ name: 'Todos', value: '' } as NameValue<string>],
     });
 
     constructor(
         private fb: FormBuilder,
         private store: Store,
         private _spentService: SpentsService,
-        private _activeModal: NgbActiveModal,
+        public activeModal: NgbActiveModal,
         private _toastr: ToastrService
     ) {
         this.participants$ = this.usersInGroup$.pipe(
@@ -61,7 +75,11 @@ export class AddSpentComponent implements OnInit {
 
     private setCurrentUserInBy() {
         const currentUserId = this.store.selectSnapshot(AppState.userId) || '';
-        this.spentForm.get('by')?.setValue(currentUserId);
+        const userFullName =
+            this.store.selectSnapshot(AppState.userFullName) || '';
+        this.spentForm
+            .get('author')
+            ?.setValue({ name: userFullName, value: currentUserId });
     }
 
     initUsersListener() {
@@ -92,8 +110,9 @@ export class AddSpentComponent implements OnInit {
             amount: this.spentForm.get('amount')?.value as number,
             description: this.spentForm.get('description')?.value as string,
             users: this.spentForm.get('users')?.value as NameValue<string>[],
-            by: this.spentForm.get('by')?.value as string,
+            authorId: this.spentForm.get('author')?.value.value as string,
             how: SpentMode.EQUALLY,
+            payedAt: Mapper.mapDate(this.spentForm.get('payedAt')?.value),
             groupId,
         };
 
@@ -102,7 +121,7 @@ export class AddSpentComponent implements OnInit {
             .pipe(take(1))
             .subscribe((x) => {
                 this._toastr.success('Gasto agregado', '👍');
-                this._activeModal.close();
+                this.activeModal.close();
             });
     }
 }

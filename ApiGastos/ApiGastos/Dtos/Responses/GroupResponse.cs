@@ -11,5 +11,6 @@ namespace ApiGastos.Dtos.Responses
         public DateTime CreatedAt { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
         public List<AppUserResponse> Users { get; set; }
+        public List<SpentResponse> Spents { get; set; }
     }
 }

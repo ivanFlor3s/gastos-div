@@ -35,6 +35,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         CloseableBadgeComponent,
         AvatarComponent,
         SelectComponent,
+        NgbTooltipModule,
     ],
     providers: [],
 })

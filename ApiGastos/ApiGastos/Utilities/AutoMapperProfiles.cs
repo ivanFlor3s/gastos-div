@@ -31,6 +31,9 @@ namespace ApiGastos.Utilities
                 });
             CreateMap<GroupResponse, Group>();
             CreateMap<AddSpentDto, Spent>();
+            CreateMap<AppUser, AppUserResponse>();
+
+            CreateMap<Spent, SpentResponse>(); 
          
 
         }
