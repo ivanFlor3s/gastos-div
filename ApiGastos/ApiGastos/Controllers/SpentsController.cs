@@ -2,6 +2,7 @@
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using AutoMapper;
+using AutoMapper.Internal.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,11 @@ namespace ApiGastos.Controllers
             group.Spents ??= new List<Spent>();    
 
             var spent = mapper.Map<Spent>(spentDto);
+            spent.Participants = spentDto.Participants
+                .Select(p => new SpentParticipant
+                    {
+                        UserId = p.Value
+                    }).ToList();
 
             spent.CreatedBy = User.Identity.GetId();
 
@@ -65,6 +71,26 @@ namespace ApiGastos.Controllers
             
             await context.SaveChangesAsync();
             
+            return Ok();
+        }
+
+        [HttpGet("{spentId}")]
+        public async Task<IActionResult> Get(int groupId,int spentId) { 
+
+            var group = await context.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var spent = await context.Spent.FindAsync(spentId);
+            if (spent == null)
+            {
+                return NotFound();
+            }
+
+            //var result = mapper.Map
+
             return Ok();
         }
     }

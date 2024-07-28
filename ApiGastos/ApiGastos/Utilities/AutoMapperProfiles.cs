@@ -30,10 +30,22 @@ namespace ApiGastos.Utilities
                     dest.Users = context.Mapper.Map<List<AppUserResponse>>(src.GroupUsers);
                 });
             CreateMap<GroupResponse, Group>();
-            CreateMap<AddSpentDto, Spent>();
+            CreateMap<AddSpentDto, Spent>()
+                .ForMember(opts => opts.Participants, act => act.Ignore());
             CreateMap<AppUser, AppUserResponse>();
 
-            CreateMap<Spent, SpentResponse>(); 
+            CreateMap<Spent, SpentResponse>()
+                .AfterMap((src, dest, context) =>
+                {
+                    dest.Participants = context.Mapper.Map<List<AppUserResponse>>(src.Participants);
+                });
+
+            CreateMap<SpentParticipant, AppUserResponse>()
+                .ForMember(opts => opts.LastName, act => act.MapFrom(src => src.User.LastName))
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+                .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName));
+
          
 
         }
