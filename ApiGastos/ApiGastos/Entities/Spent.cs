@@ -22,6 +22,10 @@ namespace ApiGastos.Entities
         public string Description { get; set; }
         public SpentMode SpentMode { get; set; }
         public Group Group { get; set; } = null!;
-        public AppUser Author { get; set; }  
+        public AppUser Author { get; set; }
+
+        [MinLength(1, ErrorMessage = "Al menos debe haber 1 usuario regitrado en el gasto")]
+        public List<SpentParticipant> Participants { get; set; } = new List<SpentParticipant>();
+
     }
 }
