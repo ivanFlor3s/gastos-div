@@ -5,3 +5,4 @@ export * from './users-list/users-list.component';
 export * from './closeable-badge/closeable-badge.component';
 export * from './avatar/avatar.component';
 export * from './select/select.component';
+export * from './avatar-group/avatar-group.component';

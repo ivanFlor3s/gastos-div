@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     AvatarComponent,
+    AvatarGroupComponent,
     CloseableBadgeComponent,
     DropdownComponent,
     NavbarComponent,
@@ -24,6 +25,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         CloseableBadgeComponent,
         AvatarComponent,
         SelectComponent,
+        AvatarGroupComponent,
     ],
     imports: [CommonModule, NgbTooltipModule, ReactiveFormsModule, FormsModule],
     exports: [
@@ -36,6 +38,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         AvatarComponent,
         SelectComponent,
         NgbTooltipModule,
+        AvatarGroupComponent,
     ],
     providers: [],
 })

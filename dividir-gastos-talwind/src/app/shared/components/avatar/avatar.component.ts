@@ -8,6 +8,7 @@ import { UserVM } from '@app/models/view-models';
 })
 export class AvatarComponent implements OnInit {
     @Input() user: UserVM;
+    @Input() borderClass: string;
 
     avatarName: string;
 
