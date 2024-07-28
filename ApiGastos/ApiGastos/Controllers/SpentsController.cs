@@ -1,4 +1,5 @@
-﻿using ApiGastos.Dtos.Spent;
+﻿using ApiGastos.Dtos.Responses;
+using ApiGastos.Dtos.Spent;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using AutoMapper;
@@ -6,6 +7,7 @@ using AutoMapper.Internal.Mappers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ApiGastos.Controllers
 {
@@ -83,15 +85,20 @@ namespace ApiGastos.Controllers
                 return NotFound();
             }
 
-            var spent = await context.Spent.FindAsync(spentId);
+            var spent = await context.Spent
+                .Include(spent => spent.Author)
+                .Include(spent => spent.Participants)
+                .ThenInclude(participant => participant.User)
+                .FirstOrDefaultAsync(spent => spent.Id == spentId);
+               
             if (spent == null)
             {
                 return NotFound();
             }
 
-            //var result = mapper.Map
+            var result = mapper.Map<SpentResponse>(spent);
 
-            return Ok();
+            return Ok(result);
         }
     }
 }
