@@ -64,7 +64,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     submit() {
         if (this.registerForm.valid) {
             const dto = this.registerForm.value as UserCreationDto;
-            this._userService.createUser(dto).subscribe(console.log);
+            //TODO resolver
+            this._userService.createUser(dto).subscribe();
         }
     }
 

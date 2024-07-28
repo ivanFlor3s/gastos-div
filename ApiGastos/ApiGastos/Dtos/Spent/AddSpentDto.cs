@@ -13,15 +13,12 @@ namespace ApiGastos.Dtos.Spent
 
         [Required]
         [MinLength(1, ErrorMessage = "Al menos debe haber 1 usuario regitrado en el gasto")]
-        public List<NameValue<string>> Users { get; set; }
+        public List<NameValue<string>> Participants { get; set; }
         [Required]
         public SpentMode How { get; set; }
         [Required]
         public string AuthorId { get; set; }
         [Required]
         public DateTime PayedAt { get; set; }
-        [Required]
-        public int GroupId { get; set; }
-        
     }
 }

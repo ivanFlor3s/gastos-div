@@ -22,6 +22,18 @@ namespace ApiGastos
                 .Property(e => e.SpentMode)
                 .HasConversion<int>()
                 .HasDefaultValue(SpentMode.EQUALLY);
+
+            modelBuilder.Entity<SpentParticipant>().HasKey(sp => new { sp.SpentId, sp.UserId});
+            
+            modelBuilder.Entity<SpentParticipant>()
+            .HasOne(sp => sp.Spent)
+            .WithMany(s => s.Participants)
+            .HasForeignKey(sp => sp.SpentId);
+
+            modelBuilder.Entity<SpentParticipant>()
+                .HasOne(sp => sp.User)
+                .WithMany(au => au.SpentParticipants)
+                .HasForeignKey(sp => sp.UserId);
         }
 
         public override int SaveChanges()
@@ -57,6 +69,7 @@ namespace ApiGastos
 
 
         public DbSet<Group> Groups { get; set; }
-        public DbSet<GroupUser> GroupUsers { get; set; }  
+        public DbSet<GroupUser> GroupUsers { get; set; }
+        public DbSet<Spent> Spent{ get; set; }
     }
 }

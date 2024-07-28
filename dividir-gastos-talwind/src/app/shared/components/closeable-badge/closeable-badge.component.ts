@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, Output } from '@angular/core';
+import { Component, HostListener, Input, OnInit, Output } from '@angular/core';
 import {
     trigger,
     state,
@@ -22,6 +22,7 @@ import {
 })
 export class CloseableBadgeComponent implements OnInit {
     hovered = false;
+    @Input() size: 'xs' | 'sm' = 'sm';
 
     @HostListener('mouseenter') onMouseEnter() {
         this.hovered = true;

@@ -44,9 +44,12 @@ namespace ApiGastos.Controllers
         {
             var group = await this.context.Groups
                 .Include(groupDb => groupDb.GroupUsers)
-                .ThenInclude(groupUserDb => groupUserDb.AppUser)
+                    .ThenInclude(groupUserDb => groupUserDb.AppUser)
                 .Include(group => group.Spents)
-                .ThenInclude(spents => spents.Author)
+                    .ThenInclude(spents => spents.Author)
+                .Include(group => group.Spents)
+                    .ThenInclude(spents => spents.Participants)
+                        .ThenInclude(participant => participant.User)
                 .OrderByDescending(group => group.CreatedAt)
                 .FirstOrDefaultAsync(groupDb => groupDb.Id == id);
 

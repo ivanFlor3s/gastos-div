@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { GroupVM } from '@app/models/view-models';
-import { GroupsService } from '@core/services';
+import { GroupsService, SpentsService } from '@core/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
     AddGroup,
+    DeleteSpent,
+    GetSpent,
+    SetEditingSpent,
     SetErrorInGroupDetail,
+    StartAddSpent,
     StartCreatingGroups,
     StartGettingGroup,
     StartGettingGroups,
@@ -14,11 +18,14 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
+import { ToastrService } from 'ngx-toastr';
+import { SpentItem } from '@app/models/dtos';
 
 export interface GroupStateModel {
     groups: GroupVM[];
     detail: GroupDetail;
     error: GettingGroupError;
+    editingSpent: SpentItem | null;
 }
 
 export class GettingGroupError {
@@ -33,7 +40,9 @@ const defaultState: GroupStateModel = {
     groups: [],
     detail: {
         group: null,
+        spents: [],
     },
+    editingSpent: null,
     error: {
         show: false,
         message: '',
@@ -67,9 +76,21 @@ export class GroupState {
         return state.detail.group?.users;
     }
 
+    @Selector()
+    static spentsInDetail(state: GroupStateModel) {
+        return state.detail?.spents || [];
+    }
+
+    @Selector()
+    static editingSpent(state: GroupStateModel) {
+        return state.editingSpent;
+    }
+
     constructor(
         private _groupService: GroupsService,
-        private _spinner: NgxSpinnerService
+        private _spentService: SpentsService,
+        private _spinner: NgxSpinnerService,
+        private _toastr: ToastrService
     ) {}
 
     @Action(StartGettingGroups)
@@ -125,12 +146,12 @@ export class GroupState {
                         detail: {
                             ...ctx.getState().detail,
                             group: res,
+                            spents: res.spents || [],
                         },
                         error: { message: '', show: false, type: null },
                     });
                 },
                 error(err: HttpErrorResponse) {
-                    console.log('tremendo error', err);
                     if (err.status == HttpStatusCode.NotFound) {
                         ctx.dispatch(
                             new SetErrorInGroupDetail(
@@ -175,5 +196,67 @@ export class GroupState {
         ctx.patchState({
             error,
         });
+    }
+
+    @Action(StartAddSpent)
+    addSpent(ctx: StateContext<GroupStateModel>, { body }: StartAddSpent) {
+        const group = ctx.getState().detail.group;
+
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+
+        return this._spentService.addSpent(group.id, body).pipe(
+            take(1),
+            // finalize(() => this._spinner.hide('addSpent'))
+            tap((_) => {
+                const groupDetail = ctx.getState().detail.group;
+                if (!groupDetail) return;
+                this._toastr.success('Gasto agregado', '🎉');
+                ctx.dispatch(new StartGettingGroup(groupDetail.id));
+            })
+        );
+    }
+
+    @Action(DeleteSpent)
+    deleteSpent(ctx: StateContext<GroupStateModel>, { spentId }: DeleteSpent) {
+        const group = ctx.getState().detail.group;
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+        return this._spentService.delete(group.id, spentId).pipe(
+            take(1),
+            tap((_) => {
+                const groupDetail = ctx.getState().detail.group;
+                if (!groupDetail) return;
+                this._toastr.success('Gasto eliminado', '🎉');
+                ctx.dispatch(new StartGettingGroup(groupDetail.id));
+            })
+        );
+    }
+
+    @Action(GetSpent)
+    getSpent(ctx: StateContext<GroupStateModel>, { spentId }: GetSpent) {
+        const group = ctx.getState().detail.group;
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+        return this._spentService.getSpent(group.id, spentId).pipe(
+            take(1),
+            tap((spent) => {
+                ctx.dispatch(new SetEditingSpent(spent));
+            })
+        );
+    }
+
+    @Action(SetEditingSpent)
+    setEditingSpent(
+        ctx: StateContext<GroupStateModel>,
+        { spent }: SetEditingSpent
+    ) {
+        ctx.patchState({ editingSpent: spent });
     }
 }

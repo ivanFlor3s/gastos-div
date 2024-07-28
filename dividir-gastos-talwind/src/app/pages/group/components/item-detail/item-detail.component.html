@@ -1,49 +1,74 @@
-<div class="hidden sm:grid grid-cols-12 gap-2 px-3 py-2">
-    <section id="date" class="my-auto col-span-1">
-        <div class="text-gray-400">
-            <div
-                class="grid grid-cols-1 gap-0 content-center text-center"
-                [ngbTooltip]="spent.payedAt | date : 'medium'">
-                <p class="text-xs leading-none">
-                    {{ spent.payedAt | date : 'MMM' | uppercase }}
-                </p>
-                <p class="text-xl leading-none">
-                    {{ spent.payedAt | date : 'dd' }}
-                </p>
+<div class="hidden sm:block px-3 py-3">
+    <div class="grid grid-cols-12">
+        <section id="date" class="my-auto col-span-1">
+            <div class="text-gray-400">
+                <div
+                    class="grid grid-cols-1 gap-0 content-center text-center"
+                    [ngbTooltip]="spent.payedAt | date : 'medium'">
+                    <p class="text-xs leading-none">
+                        {{ spent.payedAt | date : 'MMM' | uppercase }}
+                    </p>
+                    <p class="text-xl leading-none">
+                        {{ spent.payedAt | date : 'dd' }}
+                    </p>
+                </div>
             </div>
-        </div>
-    </section>
-    <section id="title" class="my-auto col-span-7">
-        <div class="flex flex-row gap-2">
-            <h3 class="text-xl">{{ spent.description }}</h3>
-        </div>
-    </section>
-    <section id="prestador" class="my-auto col-span-2">
-        <!-- <div class="grid grid-cols-1">
-            <p class="text-xs text-gray-400">prestaste</p>
-            <p class="text-lg text-emerald-500">$4000.00</p>
-        </div> -->
-    </section>
-    <section id="payer" class="my-auto col-span-2">
-        <div class="grid grid-cols-1">
-            <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
-        </div>
-    </section>
+        </section>
+        <section id="title" class="my-auto col-span-7">
+            <div class="flex flex-col gap-2">
+                <h3 class="text-xl">{{ spent.description }}</h3>
+            </div>
+            <app-avatar-group [users]="spent.participants"></app-avatar-group>
+        </section>
+
+        <section id="payer" class="my-auto col-span-3">
+            <div class="grid grid-cols-1">
+                <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
+            </div>
+        </section>
+        <section id="menu" class="my-auto col-span-1">
+            <div class="flex flex-row gap-3 text-slate-600">
+                <i
+                    class="fa-regular fa-edit"
+                    (click)="edit()"
+                    ngbTooltip="Editar"></i>
+                <i
+                    class="fa-regular fa-trash-alt"
+                    (click)="delete()"
+                    ngbTooltip="Remover"></i>
+            </div>
+        </section>
+    </div>
 </div>
 <div class="block sm:hidden px-3 py-2">
-    <div class="flex flex-row gap-3 items-center w-full">
-        <p
-            class="text-sm leading-none text-gray-400"
-            [ngbTooltip]="spent.payedAt | date : 'medium'">
-            {{ spent.payedAt | date : 'MMM dd' | uppercase }}
-        </p>
-        <p class="text-sm">
-            {{ spent.description }}
-        </p>
+    <div class="flex flex-row justify-between">
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-row gap-3 items-center w-full">
+                <p
+                    class="text-sm leading-none text-gray-400"
+                    [ngbTooltip]="spent.payedAt | date : 'medium'">
+                    {{ spent.payedAt | date : 'MMM dd' | uppercase }}
+                </p>
+                <p class="text-sm">
+                    {{ spent.description }}
+                </p>
+            </div>
+            <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
+        </div>
+        <div class="flex flex-col justify-between">
+            <app-avatar-group [users]="spent.participants"></app-avatar-group>
+            <div class="flex flex-row gap-3 justify-end text-slate-600">
+                <i
+                    class="fa-regular fa-edit"
+                    (click)="edit()"
+                    ngbTooltip="Editar"></i>
+                <i
+                    class="fa-regular fa-trash-alt"
+                    (click)="delete()"
+                    ngbTooltip="Remover"></i>
+            </div>
+        </div>
     </div>
-    <p class="text-xs items-baseline justify-end flex flex-row w-full gap-2">
-        <ng-container [ngTemplateOutlet]="spentAuthor"></ng-container>
-    </p>
 </div>
 
 <ng-template #spentAuthor>
@@ -55,6 +80,9 @@
             </strong>
             pagó
         </ng-template>
+        <br />
+        <span class="text-lg text-teal-600 font-semibold">
+            {{ spent.amount | currency }}
+        </span>
     </p>
-    <p class="text-lg font-semibold">{{ spent.amount | currency }}</p>
 </ng-template>
