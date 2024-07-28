@@ -4,7 +4,7 @@ import { NameValue } from '@app/models/view-models';
 export interface AddSpentDto {
     amount: number;
     description: string;
-    users: NameValue<string>[];
+    participants: NameValue<string>[];
     authorId: string;
     how: SpentMode;
     payedAt: Date;

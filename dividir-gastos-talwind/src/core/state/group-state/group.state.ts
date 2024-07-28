@@ -142,7 +142,6 @@ export class GroupState {
                     });
                 },
                 error(err: HttpErrorResponse) {
-                    console.log('tremendo error', err);
                     if (err.status == HttpStatusCode.NotFound) {
                         ctx.dispatch(
                             new SetErrorInGroupDetail(

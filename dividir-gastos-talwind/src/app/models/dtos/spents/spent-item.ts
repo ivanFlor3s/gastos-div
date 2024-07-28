@@ -10,4 +10,5 @@ export interface SpentItem {
     authorId: string;
     author: UserVM;
     payedAt: Date;
+    participants: UserVM[];
 }
