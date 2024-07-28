@@ -191,7 +191,14 @@ export class GroupState {
 
     @Action(StartAddSpent)
     addSpent(ctx: StateContext<GroupStateModel>, { body }: StartAddSpent) {
-        return this._spentService.addSpent(body).pipe(
+        const group = ctx.getState().detail.group;
+
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+
+        return this._spentService.addSpent(group.id, body).pipe(
             take(1),
             // finalize(() => this._spinner.hide('addSpent'))
             tap((_) => {

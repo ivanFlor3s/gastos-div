@@ -7,6 +7,5 @@ export interface AddSpentDto {
     users: NameValue<string>[];
     authorId: string;
     how: SpentMode;
-    groupId: number;
     payedAt: Date;
 }

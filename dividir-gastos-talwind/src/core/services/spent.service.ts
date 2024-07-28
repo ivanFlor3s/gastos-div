@@ -9,7 +9,11 @@ import { environment } from 'src/environments/environment';
 export class SpentsService {
     private _http = inject(HttpClient);
 
-    addSpent(dto: AddSpentDto) {
-        return this._http.post(`${environment.API_URL}/spents`, dto);
+    addSpent(groupId: number, dto: AddSpentDto) {
+        return this._http.post(
+            `${environment.API_URL}/groups/${groupId}/spents`,
+            dto
+        );
+    }
     }
 }

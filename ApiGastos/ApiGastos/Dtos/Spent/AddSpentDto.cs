@@ -20,8 +20,5 @@ namespace ApiGastos.Dtos.Spent
         public string AuthorId { get; set; }
         [Required]
         public DateTime PayedAt { get; set; }
-        [Required]
-        public int GroupId { get; set; }
-        
     }
 }

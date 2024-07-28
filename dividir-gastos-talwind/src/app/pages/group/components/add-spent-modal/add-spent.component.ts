@@ -113,7 +113,6 @@ export class AddSpentComponent implements OnInit {
             authorId: this.spentForm.get('author')?.value.value as string,
             how: SpentMode.EQUALLY,
             payedAt: Mapper.mapDate(this.spentForm.get('payedAt')?.value),
-            groupId,
         };
 
         this.store

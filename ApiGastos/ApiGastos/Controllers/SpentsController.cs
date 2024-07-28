@@ -1,4 +1,4 @@
-﻿using ApiGastos.Dtos.Spent;
+using ApiGastos.Dtos.Spent;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using AutoMapper;
@@ -10,7 +10,8 @@ namespace ApiGastos.Controllers
 {
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
-    [Route("api/spents")]
+    [Route("api/groups/{groupId}/spents")]
+
     public class SpentsController : ControllerBase
     {
         private readonly IMapper mapper;
@@ -23,9 +24,9 @@ namespace ApiGastos.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] AddSpentDto spentDto)
+        public async Task<IActionResult> Post(int groupId, [FromBody] AddSpentDto spentDto)
         {
-            var group = await context.Groups.FindAsync(spentDto.GroupId);
+            var group = await context.Groups.FindAsync(groupId);
             if(group == null)
             {
                 return NotFound();
