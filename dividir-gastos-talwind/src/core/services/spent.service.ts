@@ -27,4 +27,11 @@ export class SpentsService {
             `${environment.API_URL}/groups/${groupId}/spents/${spentId}`
         );
     }
+
+    edit(groupId: number, spentId: number, dto: AddSpentDto) {
+        return this._http.put(
+            `${environment.API_URL}/groups/${groupId}/spents/${spentId}`,
+            dto
+        );
+    }
 }

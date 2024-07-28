@@ -11,6 +11,7 @@ import {
     GroupState,
     SetEditingSpent,
     StartAddSpent,
+    StartGettingGroup,
 } from '@core/state';
 import { Mapper } from '@core/utils';
 import {
@@ -18,7 +19,7 @@ import {
     NgbCalendar,
     NgbDateParserFormatter,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Select, Selector, Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { ToastrService } from 'ngx-toastr';
 import { Observable, map, take } from 'rxjs';
 
@@ -144,12 +145,26 @@ export class AddSpentComponent implements OnInit {
 
         const body: AddSpentDto = this.buildDto();
 
-        this.store
-            .dispatch(new StartAddSpent(body))
-            .pipe(take(1))
-            .subscribe(() => {
-                this.activeModal.close();
-            });
+        if (!this.isEdit) {
+            this.store
+                .dispatch(new StartAddSpent(body))
+                .pipe(take(1))
+                .subscribe(() => {
+                    this.activeModal.close();
+                });
+        } else {
+            const groupId = this.store.selectSnapshot(GroupState.detail)?.group
+                ?.id;
+            if (!groupId) return;
+            this._spentService
+                .edit(groupId, this.spent.id, body)
+                .pipe(take(1))
+                .subscribe(() => {
+                    this.activeModal.close();
+                    this.store.dispatch(new StartGettingGroup(groupId));
+                    this._toastr.success('Gasto editado', '🎉');
+                });
+        }
     }
 
     private buildDto(): AddSpentDto {
