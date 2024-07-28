@@ -1,8 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SpentItem } from '@app/models/dtos';
 import { AppState, DeleteSpent } from '@core/state';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import Swal from 'sweetalert2';
+import { AddSpentComponent } from '../add-spent-modal/add-spent.component';
 
 @Component({
     selector: 'app-item-detail',
@@ -13,7 +15,7 @@ export class ItemDetailComponent implements OnInit {
     @Input() spent: SpentItem;
     iPaid: boolean = false;
 
-    constructor(private store: Store) {}
+    constructor(private store: Store, private _ngbModal: NgbModal) {}
 
     ngOnInit() {
         const userId = this.store.selectSnapshot(AppState.userId) as string;
@@ -34,5 +36,10 @@ export class ItemDetailComponent implements OnInit {
                 this.store.dispatch(new DeleteSpent(this.spent.id));
             }
         });
+    }
+
+    edit() {
+        const modalRef = this._ngbModal.open(AddSpentComponent, {});
+        modalRef.componentInstance.spent = this.spent;
     }
 }
