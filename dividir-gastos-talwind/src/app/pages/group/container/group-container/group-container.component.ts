@@ -24,7 +24,6 @@ export class GroupContainerComponent implements OnInit {
         private modalService: NgbModal
     ) {
         const { idGroup } = this.activatedRoute.snapshot.params;
-        console.log(idGroup);
 
         this.store.dispatch(new StartGettingGroup(idGroup));
     }

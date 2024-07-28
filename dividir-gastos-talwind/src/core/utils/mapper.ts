@@ -8,7 +8,6 @@ export class Mapper {
         return new Date(date.year, date.month - 1, date.day);
     }
     public static mapNgbDate(date: Date): NgbDate {
-        console.log(date);
         if (!date) {
             throw new Error('Date is required');
         }

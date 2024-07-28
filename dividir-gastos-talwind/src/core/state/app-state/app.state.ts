@@ -69,7 +69,6 @@ export class AppState {
                 next(res) {
                     const { token, expiration } = res;
                     const tokenDecoded = jwt_decode(token) as any;
-                    console.log(tokenDecoded);
 
                     ctx.patchState({
                         token,

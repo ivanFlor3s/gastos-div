@@ -4,9 +4,7 @@ import { MSGE_ERROR_TOKEN } from '../errors.module';
 
 @Injectable()
 export class ValidationErrorMsgeService {
-    constructor(@Inject(MSGE_ERROR_TOKEN) private config: MsgeError) {
-        console.log('init service');
-    }
+    constructor(@Inject(MSGE_ERROR_TOKEN) private config: MsgeError) {}
 
     resolverErrorMessage(key: string): string | void {
         // eslint-disable-next-line no-prototype-builtins
