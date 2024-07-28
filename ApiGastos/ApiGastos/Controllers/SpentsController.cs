@@ -1,4 +1,4 @@
-using ApiGastos.Dtos.Spent;
+﻿using ApiGastos.Dtos.Spent;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using AutoMapper;
@@ -43,6 +43,29 @@ namespace ApiGastos.Controllers
             await context.SaveChangesAsync();
             
             return Ok();
-        }   
+        }
+
+        [HttpDelete("{spentId}")]
+        public async Task<IActionResult> Delete(int groupId, int spentId)
+        {
+
+            var group = await context.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var spent = await context.Spent.FindAsync(spentId);
+            if(spent == null)
+            {
+                return NotFound();
+            }
+
+            context.Spent.Remove(spent);
+            
+            await context.SaveChangesAsync();
+            
+            return Ok();
+        }
     }
 }
