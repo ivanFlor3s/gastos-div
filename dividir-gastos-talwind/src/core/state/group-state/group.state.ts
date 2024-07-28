@@ -5,6 +5,8 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
     AddGroup,
     DeleteSpent,
+    GetSpent,
+    SetEditingSpent,
     SetErrorInGroupDetail,
     StartAddSpent,
     StartCreatingGroups,
@@ -17,11 +19,13 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
 import { ToastrService } from 'ngx-toastr';
+import { SpentItem } from '@app/models/dtos';
 
 export interface GroupStateModel {
     groups: GroupVM[];
     detail: GroupDetail;
     error: GettingGroupError;
+    editingSpent: SpentItem | null;
 }
 
 export class GettingGroupError {
@@ -38,6 +42,7 @@ const defaultState: GroupStateModel = {
         group: null,
         spents: [],
     },
+    editingSpent: null,
     error: {
         show: false,
         message: '',
@@ -74,6 +79,11 @@ export class GroupState {
     @Selector()
     static spentsInDetail(state: GroupStateModel) {
         return state.detail?.spents || [];
+    }
+
+    @Selector()
+    static editingSpent(state: GroupStateModel) {
+        return state.editingSpent;
     }
 
     constructor(
@@ -225,5 +235,28 @@ export class GroupState {
                 ctx.dispatch(new StartGettingGroup(groupDetail.id));
             })
         );
+    }
+
+    @Action(GetSpent)
+    getSpent(ctx: StateContext<GroupStateModel>, { spentId }: GetSpent) {
+        const group = ctx.getState().detail.group;
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+        return this._spentService.getSpent(group.id, spentId).pipe(
+            take(1),
+            tap((spent) => {
+                ctx.dispatch(new SetEditingSpent(spent));
+            })
+        );
+    }
+
+    @Action(SetEditingSpent)
+    setEditingSpent(
+        ctx: StateContext<GroupStateModel>,
+        { spent }: SetEditingSpent
+    ) {
+        ctx.patchState({ editingSpent: spent });
     }
 }

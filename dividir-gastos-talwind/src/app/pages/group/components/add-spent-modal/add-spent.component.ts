@@ -1,11 +1,17 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { AddSpentDto } from '@app/models/dtos';
+import { AddSpentDto, SpentItem } from '@app/models/dtos';
 import { SpentMode } from '@app/models/enums/spent-mode.enum';
 import { NameValue, UserVM } from '@app/models/view-models';
 import { CustomDateParserFormatter } from '@core/adapters';
 import { SpentsService } from '@core/services';
-import { AppState, GroupState, StartAddSpent } from '@core/state';
+import {
+    AppState,
+    GetSpent,
+    GroupState,
+    SetEditingSpent,
+    StartAddSpent,
+} from '@core/state';
 import { Mapper } from '@core/utils';
 import {
     NgbActiveModal,
@@ -28,6 +34,8 @@ import { Observable, map, take } from 'rxjs';
     ],
 })
 export class AddSpentComponent implements OnInit {
+    @Input() spent: SpentItem;
+
     @Select(GroupState.usersInDetail) usersInGroup$: Observable<UserVM[]>;
 
     participants$: Observable<NameValue<string>[]>;
@@ -45,6 +53,7 @@ export class AddSpentComponent implements OnInit {
         author: [{} as NameValue<string>, Validators.required],
         how: [{ name: 'Todos', value: '' } as NameValue<string>],
     });
+    isEdit: boolean = false;
 
     constructor(
         private fb: FormBuilder,
@@ -71,6 +80,35 @@ export class AddSpentComponent implements OnInit {
         this.setCurrentUserInBy();
 
         this.initUsersListener();
+
+        if (this.spent) {
+            this.isEdit = true;
+            this.loadDataFromExistingSpent();
+        }
+    }
+    loadDataFromExistingSpent() {
+        this.store
+            .dispatch(new GetSpent(this.spent.id))
+            .pipe(take(1))
+            .subscribe((_) => {
+                const spentFromBack = this.store.selectSnapshot(
+                    GroupState.editingSpent
+                );
+                if (!spentFromBack) return;
+                const users = Mapper.mapUserVMsToNameValue(
+                    spentFromBack.participants
+                );
+                this.spentForm.patchValue({
+                    description: spentFromBack.description,
+                    amount: spentFromBack.amount,
+                    payedAt: Mapper.mapNgbDate(spentFromBack.payedAt),
+                    users,
+                    author: {
+                        name: `${spentFromBack.author.firstName} ${spentFromBack.author.lastName}`,
+                        value: spentFromBack.authorId,
+                    },
+                });
+            });
     }
 
     private setCurrentUserInBy() {
@@ -104,16 +142,7 @@ export class AddSpentComponent implements OnInit {
             return;
         }
 
-        const groupId = this.store.selectSnapshot(GroupState.detail)?.group
-            ?.id as number;
-        const body: AddSpentDto = {
-            amount: this.spentForm.get('amount')?.value as number,
-            description: this.spentForm.get('description')?.value as string,
-            users: this.spentForm.get('users')?.value as NameValue<string>[],
-            authorId: this.spentForm.get('author')?.value.value as string,
-            how: SpentMode.EQUALLY,
-            payedAt: Mapper.mapDate(this.spentForm.get('payedAt')?.value),
-        };
+        const body: AddSpentDto = this.buildDto();
 
         this.store
             .dispatch(new StartAddSpent(body))
@@ -121,5 +150,33 @@ export class AddSpentComponent implements OnInit {
             .subscribe(() => {
                 this.activeModal.close();
             });
+    }
+
+    private buildDto(): AddSpentDto {
+        const dto: AddSpentDto = {
+            amount: this.spentForm.get('amount')?.value as number,
+            description: this.spentForm.get('description')?.value as string,
+            participants: [],
+            authorId: this.spentForm.get('author')?.value.value as string,
+            how: SpentMode.EQUALLY,
+            payedAt: Mapper.mapDate(this.spentForm.get('payedAt')?.value),
+        };
+        if (this.spentForm.get('users')?.value[0].value === 'all') {
+            const participants =
+                this.store.selectSnapshot(GroupState.usersInDetail) || [];
+            dto.participants = participants.map((x) => ({
+                name: `${x.firstName} ${x.lastName}`,
+                value: x.id,
+            }));
+        } else {
+            dto.participants = this.spentForm.get('users')?.value || [];
+        }
+        return dto;
+    }
+
+    ngOnDestroy(): void {
+        //Called once, before the instance is destroyed.
+        //Add 'implements OnDestroy' to the class.
+        this.store.dispatch(new SetEditingSpent(null));
     }
 }

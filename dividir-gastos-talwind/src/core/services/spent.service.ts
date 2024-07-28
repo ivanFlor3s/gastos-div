@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { AddSpentDto } from '@app/models/dtos';
+import { AddSpentDto, SpentItem } from '@app/models/dtos';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -18,6 +18,12 @@ export class SpentsService {
 
     delete(groupId: number, spentId: number) {
         return this._http.delete(
+            `${environment.API_URL}/groups/${groupId}/spents/${spentId}`
+        );
+    }
+
+    getSpent(groupId: number, spentId: number) {
+        return this._http.get<SpentItem>(
             `${environment.API_URL}/groups/${groupId}/spents/${spentId}`
         );
     }

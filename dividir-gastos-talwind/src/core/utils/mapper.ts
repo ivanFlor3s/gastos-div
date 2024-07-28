@@ -1,3 +1,4 @@
+import { NameValue, UserVM } from '@app/models/view-models';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap';
 
 export class Mapper {
@@ -19,5 +20,12 @@ export class Mapper {
             date.getMonth() + 1,
             date.getDate()
         );
+    }
+
+    public static mapUserVMsToNameValue(users: UserVM[]): NameValue<string>[] {
+        return users.map((x) => ({
+            name: `${x.firstName} ${x.lastName}`,
+            value: x.id,
+        }));
     }
 }

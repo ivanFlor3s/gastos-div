@@ -1,7 +1,7 @@
 import { CreateGroupRequest } from '@app/interfaces';
 import { GroupVM } from '@app/models/view-models';
 import { GettingGroupError } from './group.state';
-import { AddSpentDto } from '@app/models/dtos';
+import { AddSpentDto, SpentItem } from '@app/models/dtos';
 
 export class StartGettingGroups {
     static readonly type = '[Groups] StartGettingGroups';
@@ -36,4 +36,14 @@ export class StartAddSpent {
 export class DeleteSpent {
     static readonly type = '[Groups] DeleteSpent';
     constructor(public spentId: number) {}
+}
+
+export class GetSpent {
+    static readonly type = '[Groups] GetSpent';
+    constructor(public spentId: number) {}
+}
+
+export class SetEditingSpent {
+    static readonly type = '[Groups] SetEditingSpent';
+    constructor(public spent: SpentItem | null) {}
 }
