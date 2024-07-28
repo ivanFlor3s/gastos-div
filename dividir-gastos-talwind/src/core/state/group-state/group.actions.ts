@@ -32,3 +32,8 @@ export class StartAddSpent {
     static readonly type = '[Groups] StartAddSpent';
     constructor(public body: AddSpentDto) {}
 }
+
+export class DeleteSpent {
+    static readonly type = '[Groups] DeleteSpent';
+    constructor(public spentId: number) {}
+}

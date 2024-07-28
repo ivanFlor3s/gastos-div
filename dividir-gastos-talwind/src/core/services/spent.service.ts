@@ -15,5 +15,10 @@ export class SpentsService {
             dto
         );
     }
+
+    delete(groupId: number, spentId: number) {
+        return this._http.delete(
+            `${environment.API_URL}/groups/${groupId}/spents/${spentId}`
+        );
     }
 }

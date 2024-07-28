@@ -4,6 +4,7 @@ import { GroupsService, SpentsService } from '@core/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
     AddGroup,
+    DeleteSpent,
     SetErrorInGroupDetail,
     StartAddSpent,
     StartCreatingGroups,
@@ -16,7 +17,6 @@ import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
 import { ToastrService } from 'ngx-toastr';
-import { SpentItem } from '@app/models/dtos';
 
 export interface GroupStateModel {
     groups: GroupVM[];
@@ -205,6 +205,24 @@ export class GroupState {
                 const groupDetail = ctx.getState().detail.group;
                 if (!groupDetail) return;
                 this._toastr.success('Gasto agregado', '🎉');
+                ctx.dispatch(new StartGettingGroup(groupDetail.id));
+            })
+        );
+    }
+
+    @Action(DeleteSpent)
+    deleteSpent(ctx: StateContext<GroupStateModel>, { spentId }: DeleteSpent) {
+        const group = ctx.getState().detail.group;
+        if (group == null) {
+            console.error('No hay grupo');
+            return;
+        }
+        return this._spentService.delete(group.id, spentId).pipe(
+            take(1),
+            tap((_) => {
+                const groupDetail = ctx.getState().detail.group;
+                if (!groupDetail) return;
+                this._toastr.success('Gasto eliminado', '🎉');
                 ctx.dispatch(new StartGettingGroup(groupDetail.id));
             })
         );
