@@ -53,6 +53,40 @@ namespace ApiGastos.Controllers
             return Ok();
         }
 
+        [HttpPut("{spentId}")]
+        public async Task<IActionResult> Edit(int groupId, int spentId, [FromBody] AddSpentDto spentDto)
+        {
+            var group = await context.Groups.FindAsync(groupId);
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var spent = await context.Spent
+                .Include(spent => spent.Author)
+                .Include(spent => spent.Participants)
+                .ThenInclude(participant => participant.User)
+                .FirstOrDefaultAsync(spent => spent.Id == spentId);
+
+            if (spent == null)
+            {
+                return NotFound();
+            }
+
+            mapper.Map(spentDto, spent);
+
+
+            spent.Participants = spentDto.Participants
+                .Select(p => new SpentParticipant
+                {
+                        UserId = p.Value
+                    }).ToList();
+
+            await context.SaveChangesAsync();
+
+            return Ok();
+        }   
+
         [HttpDelete("{spentId}")]
         public async Task<IActionResult> Delete(int groupId, int spentId)
         {
