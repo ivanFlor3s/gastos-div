@@ -29,7 +29,7 @@ export class NewGroupComponent {
 
     form = this._fb.group({
         name: ['', Validators.required],
-        description: [''],
+        description: ['', [Validators.required, Validators.maxLength(50)]],
         emails: this._fb.array([]),
     });
 
@@ -38,9 +38,7 @@ export class NewGroupComponent {
     }
 
     addEmailInput() {
-        this.emails.push(
-            this._fb.control('', [Validators.required, Validators.email])
-        );
+        this.emails.push(this._fb.control('', [Validators.email]));
     }
 
     removeEmail(index: number) {
