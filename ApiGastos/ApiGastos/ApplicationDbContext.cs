@@ -1,4 +1,5 @@
 ﻿using ApiGastos.Entities;
+using ApiGastos.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,8 +7,11 @@ namespace ApiGastos
 {
     public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public ApplicationDbContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
+            _httpContextAccessor = httpContextAccessor;
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +38,9 @@ namespace ApiGastos
                 .HasOne(sp => sp.User)
                 .WithMany(au => au.SpentParticipants)
                 .HasForeignKey(sp => sp.UserId);
+
+            modelBuilder.Entity<Group>()
+                .HasQueryFilter(g => g.GroupUsers.Any(gu => gu.AppUserId == _httpContextAccessor.HttpContext.User.Identity.GetId()));
         }
 
         public override int SaveChanges()
