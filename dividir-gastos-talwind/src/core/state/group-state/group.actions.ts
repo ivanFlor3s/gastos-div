@@ -1,5 +1,5 @@
 import { CreateGroupRequest } from '@app/interfaces';
-import { GroupVM } from '@app/models/view-models';
+import { BasicGroupVM, GroupVM } from '@app/models/view-models';
 import { GettingGroupError } from './group.state';
 import { AddSpentDto, SpentItem } from '@app/models/dtos';
 
@@ -46,4 +46,14 @@ export class GetSpent {
 export class SetEditingSpent {
     static readonly type = '[Groups] SetEditingSpent';
     constructor(public spent: SpentItem | null) {}
+}
+
+export class StartGettingBasicGroup {
+    static readonly type = '[Groups] StartGettingBasicGroup';
+    constructor(public groupId: number) {}
+}
+
+export class SetEditingGroup {
+    static readonly type = '[Groups] SetEditingGroup';
+    constructor(public group: BasicGroupVM) {}
 }
