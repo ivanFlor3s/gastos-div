@@ -58,6 +58,42 @@ namespace ApiGastos.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}/basic")]
+        public async Task<IActionResult> GetBasic(int id, [FromQuery] bool excludeCurrentUser)
+        {
+            var groupQuery = this.context.Groups
+                .Include(groupDb => groupDb.GroupUsers)
+                    .ThenInclude(groupUserDb => groupUserDb.AppUser)
+                .Where(groupDb => groupDb.Id == id)
+                .AsQueryable();
+
+            if (excludeCurrentUser)
+            {
+                groupQuery = groupQuery
+                    .Select(g => new Group
+                    {
+                        Id = g.Id,
+                        Name = g.Name,
+                        CreatedAt = g.CreatedAt,
+                        GroupUsers = g.GroupUsers.Where(gu => gu.AppUserId != User.Identity.GetId()).ToList()
+                    });
+            }
+
+
+            var group = await groupQuery.FirstOrDefaultAsync();
+
+            if (group == null)
+            {
+                return NotFound();
+            }
+
+            var result = mapper.Map<GroupBasicResponse>(group);
+
+            return Ok(result);
+        }
+
+
+
         // POST api/<GroupController>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] GroupCreationDto groupDto)
@@ -81,6 +117,7 @@ namespace ApiGastos.Controllers
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
+
         }
 
         // DELETE api/<GroupController>/5

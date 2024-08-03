@@ -46,6 +46,12 @@ namespace ApiGastos.Utilities
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
                 .ForMember(dest => dest.FirstName, opt => opt.MapFrom(src => src.User.FirstName));
 
+            CreateMap<Group, GroupBasicResponse>()
+                .AfterMap((src, dest, context) =>
+                {
+                    dest.Users = context.Mapper.Map<List<AppUserResponse>>(src.GroupUsers);
+                });
+
          
 
         }
