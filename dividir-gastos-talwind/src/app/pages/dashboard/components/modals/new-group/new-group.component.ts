@@ -39,28 +39,32 @@ export class NewGroupComponent {
 
     ngOnInit(): void {
         if (this.editing) {
-            this.store
-                .dispatch(new StartGettingBasicGroup(this.groupId))
-                .pipe(take(1))
-                .subscribe((_) => {
-                    const basicGroup = this.store.selectSnapshot(
-                        GroupState.editingGroup
-                    );
-                    if (basicGroup) {
-                        this.form.patchValue({
-                            name: basicGroup.name,
-                            description: basicGroup.description,
-                        });
-                        basicGroup.users.forEach((user) => {
-                            this.emails.push(
-                                this._fb.control(user.email, [Validators.email])
-                            );
-                        });
-                    }
-                });
+            this.getBasicGroup();
         } else {
             this.addEmailInput();
         }
+    }
+
+    private getBasicGroup() {
+        this.store
+            .dispatch(new StartGettingBasicGroup(this.groupId))
+            .pipe(take(1))
+            .subscribe((_) => {
+                const basicGroup = this.store.selectSnapshot(
+                    GroupState.editingGroup
+                );
+                if (basicGroup) {
+                    this.form.patchValue({
+                        name: basicGroup.name,
+                        description: basicGroup.description,
+                    });
+                    basicGroup.users.forEach((user) => {
+                        this.emails.push(
+                            this._fb.control(user.email, [Validators.email])
+                        );
+                    });
+                }
+            });
     }
 
     addEmailInput() {
