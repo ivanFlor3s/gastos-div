@@ -1,12 +1,15 @@
-import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { CreateGroupRequest } from '@app/interfaces';
-import { GroupsService } from '@core/services';
-import { AppState, StartCreatingGroups } from '@core/state';
+import {
+    AppState,
+    GroupState,
+    StartCreatingGroups,
+    StartGettingBasicGroup,
+} from '@core/state';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { finalize, take } from 'rxjs';
+import { take } from 'rxjs';
 
 @Component({
     selector: 'app-new-group',
@@ -14,10 +17,11 @@ import { finalize, take } from 'rxjs';
     styleUrls: ['./new-group.component.css'],
 })
 export class NewGroupComponent {
+    editing: boolean = false;
+    groupId: number;
+
     private _fb = inject(FormBuilder);
-
     private store = inject(Store);
-
     private modalService = inject(NgbModal);
     private _activeModal = inject(NgbActiveModal);
 
@@ -34,7 +38,29 @@ export class NewGroupComponent {
     });
 
     ngOnInit(): void {
-        this.addEmailInput();
+        if (this.editing) {
+            this.store
+                .dispatch(new StartGettingBasicGroup(this.groupId))
+                .pipe(take(1))
+                .subscribe((_) => {
+                    const basicGroup = this.store.selectSnapshot(
+                        GroupState.editingGroup
+                    );
+                    if (basicGroup) {
+                        this.form.patchValue({
+                            name: basicGroup.name,
+                            description: basicGroup.description,
+                        });
+                        basicGroup.users.forEach((user) => {
+                            this.emails.push(
+                                this._fb.control(user.email, [Validators.email])
+                            );
+                        });
+                    }
+                });
+        } else {
+            this.addEmailInput();
+        }
     }
 
     addEmailInput() {

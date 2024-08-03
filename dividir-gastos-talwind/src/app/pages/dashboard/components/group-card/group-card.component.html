@@ -7,10 +7,20 @@
             alt="anya" />
     </div>
     <div class="flex w-full flex-col p-8">
-        <h3 class="text-indigo-600 font-bold text-lg">{{ group.name }}</h3>
-        <p class="text-sm line-clamp-2">
-            {{ group.description }}
-        </p>
+        <div class="flex flex-row gap-2">
+            <div class="flex-1">
+                <h3 class="text-indigo-600 font-bold text-lg">
+                    {{ group.name }}
+                </h3>
+                <p class="text-sm line-clamp-2">
+                    {{ group.description }}
+                </p>
+            </div>
+
+            <span
+                (click)="edit($event)"
+                class="fas fa-pen text-indigo-300 hover:text-indigo-500 relative z-10"></span>
+        </div>
         <div class="flex flex-row justify-between mt-auto">
             <span>
                 {{ group.users.length }}
