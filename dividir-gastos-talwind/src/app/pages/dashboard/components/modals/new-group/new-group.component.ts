@@ -34,7 +34,7 @@ export class NewGroupComponent {
 
     form = this._fb.group({
         name: ['', Validators.required],
-        description: ['', [Validators.required, Validators.maxLength(50)]],
+        description: ['', [Validators.required, Validators.maxLength(100)]],
         emails: this._fb.array([]),
     });
 
