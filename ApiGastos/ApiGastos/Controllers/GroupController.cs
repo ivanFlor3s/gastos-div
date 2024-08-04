@@ -1,4 +1,4 @@
-using ApiGastos.Dtos;
+﻿using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
@@ -116,9 +116,25 @@ namespace ApiGastos.Controllers
 
         // PUT api/<GroupController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] GroupCreationDto groupDto)
         {
+            var groupFromDb = context.Groups
+                .Include(group => group.GroupUsers)
+                    .ThenInclude(groupUser => groupUser.AppUser)
+                .Where(group => group.Id == id)
+                .FirstOrDefault();   
 
+            if (groupFromDb == null)
+            {
+                return NotFound();
+            }
+            
+            groupFromDb.Name = groupDto.Name;
+            groupFromDb.Description = groupDto.Description;
+
+            context.Update(groupFromDb);
+            await context.SaveChangesAsync();
+            return Ok();
         }
 
         // DELETE api/<GroupController>/5
