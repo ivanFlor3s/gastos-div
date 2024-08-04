@@ -1,4 +1,4 @@
-﻿using ApiGastos.Dtos;
+using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
@@ -74,6 +74,7 @@ namespace ApiGastos.Controllers
                     {
                         Id = g.Id,
                         Name = g.Name,
+                        Description = g.Description,    
                         CreatedAt = g.CreatedAt,
                         GroupUsers = g.GroupUsers.Where(gu => gu.AppUserId != User.Identity.GetId()).ToList()
                     });
