@@ -57,3 +57,7 @@ export class SetEditingGroup {
     static readonly type = '[Groups] SetEditingGroup';
     constructor(public group: BasicGroupVM) {}
 }
+export class StartEditingGroup {
+    static readonly type = '[Groups] StartEditingGroup';
+    constructor(public groupId: number, public body: CreateGroupRequest) {}
+}

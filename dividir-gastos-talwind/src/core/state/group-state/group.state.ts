@@ -11,6 +11,7 @@ import {
     SetErrorInGroupDetail,
     StartAddSpent,
     StartCreatingGroups,
+    StartEditingGroup,
     StartGettingBasicGroup,
     StartGettingGroup,
     StartGettingGroups,
@@ -289,5 +290,19 @@ export class GroupState {
         { group }: SetEditingGroup
     ) {
         ctx.patchState({ editingGroup: group });
+    }
+
+    @Action(StartEditingGroup)
+    startEditingGroup(
+        ctx: StateContext<GroupStateModel>,
+        { groupId, body }: StartEditingGroup
+    ) {
+        return this._groupService.editGroup(groupId, body).pipe(
+            take(1),
+            tap((_) => {
+                this._toastr.success('Grupo editado', '🎉');
+                ctx.dispatch(new StartGettingGroups(''));
+            })
+        );
     }
 }

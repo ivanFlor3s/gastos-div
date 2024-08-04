@@ -5,6 +5,7 @@ import {
     AppState,
     GroupState,
     StartCreatingGroups,
+    StartEditingGroup,
     StartGettingBasicGroup,
 } from '@core/state';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -80,13 +81,15 @@ export class NewGroupComponent {
             return;
         }
 
-        this.store
-            .dispatch(
-                new StartCreatingGroups(this.form.value as CreateGroupRequest)
-            )
-            .subscribe(() => {
-                this._activeModal.close();
-            });
+        const action = this.editing
+            ? new StartEditingGroup(
+                  this.groupId,
+                  this.form.value as CreateGroupRequest
+              )
+            : new StartCreatingGroups(this.form.value as CreateGroupRequest);
+        this.store.dispatch(action).subscribe(() => {
+            this._activeModal.close();
+        });
     }
 
     dismiss() {

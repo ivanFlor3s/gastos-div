@@ -38,4 +38,8 @@ export class GroupsService {
             { params }
         );
     }
+
+    editGroup(groupId: number, body: CreateGroupRequest) {
+        return this._http.put(`${environment.API_URL}/group/${groupId}`, body);
+    }
 }
