@@ -68,9 +68,11 @@ namespace ApiGastos
                 if (entry.State == EntityState.Added)
                 {
                     auditable.CreatedAt = DateTime.UtcNow;
+                    auditable.CreatedBy = _httpContextAccessor.HttpContext.User.Identity.GetId();
                 }
 
                 auditable.LastModified = DateTime.UtcNow;
+                auditable.LastModifiedBy = _httpContextAccessor.HttpContext.User.Identity.GetId();
             }
         }
 
