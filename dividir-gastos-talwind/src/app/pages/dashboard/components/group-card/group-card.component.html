@@ -7,16 +7,41 @@
             alt="anya" />
     </div>
     <div class="flex w-full flex-col p-8">
-        <h3 class="text-indigo-600 font-bold text-lg">{{ group.name }}</h3>
-        <p class="text-sm line-clamp-2">
-            {{ group.description }}
-        </p>
+        <div class="flex flex-row gap-2">
+            <div class="flex-1">
+                <h3 class="text-indigo-600 font-bold text-lg">
+                    {{ group.name }}
+                </h3>
+                <p class="text-sm line-clamp-2">
+                    {{ group.description }}
+                </p>
+            </div>
+            <ng-container *ngIf="group.isAdmin">
+                <span
+                    (click)="edit($event)"
+                    class="fas fa-pen text-indigo-300 hover:text-indigo-500 relative z-10"></span>
+            </ng-container>
+        </div>
         <div class="flex flex-row justify-between mt-auto">
             <span>
                 {{ group.users.length }}
                 {{ group.users.length > 1 ? 'participantes' : 'participante' }}
             </span>
-            <span>$400</span>
+            <ng-container *ngIf="group.totalSpent; else elseTemplate">
+                <span class="text-lg text-teal-600 font-semibold">
+                    {{ group.totalSpent | currency }}
+                </span>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <a
+                    class="text-xs text-blue-400"
+                    href="https://x.com/search?q=%23NoHayPlata&src=typed_query"
+                    target="_blank"
+                    rel="noopener"
+                    click-stop-propagation>
+                    #No hay plata 😿
+                </a>
+            </ng-template>
         </div>
     </div>
 </div>

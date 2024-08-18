@@ -10,7 +10,7 @@ import {
     SelectComponent,
     UsersListComponent,
 } from './components';
-import { ClickOutsideDirective } from './directives';
+import { ClickOutsideDirective, ClickStopPropagation } from './directives';
 
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +26,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         AvatarComponent,
         SelectComponent,
         AvatarGroupComponent,
+        ClickStopPropagation,
     ],
     imports: [CommonModule, NgbTooltipModule, ReactiveFormsModule, FormsModule],
     exports: [
@@ -39,6 +40,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         SelectComponent,
         NgbTooltipModule,
         AvatarGroupComponent,
+        ClickStopPropagation,
     ],
     providers: [],
 })

@@ -10,7 +10,9 @@ namespace ApiGastos.Dtos.Responses
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public string ImageUrl { get; set; } = string.Empty;
-        public List<AppUserResponse> Users { get; set; }
+        public bool IsAdmin { get; set; }
+        public List<GroupMemberResponse> Users { get; set; }
         public List<SpentResponse> Spents { get; set; }
+        public decimal TotalSpent { get; set; }
     }
 }

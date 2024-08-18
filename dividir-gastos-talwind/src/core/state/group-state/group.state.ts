@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { GroupVM } from '@app/models/view-models';
+import { BasicGroupVM, GroupVM } from '@app/models/view-models';
 import { GroupsService, SpentsService } from '@core/services';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
     AddGroup,
     DeleteSpent,
     GetSpent,
+    SetEditingGroup,
     SetEditingSpent,
     SetErrorInGroupDetail,
     StartAddSpent,
     StartCreatingGroups,
+    StartEditingGroup,
+    StartGettingBasicGroup,
     StartGettingGroup,
     StartGettingGroups,
 } from './group.actions';
@@ -20,12 +23,14 @@ import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
 import { ToastrService } from 'ngx-toastr';
 import { SpentItem } from '@app/models/dtos';
+import { GetCurrentUserId } from '@core/utils';
 
 export interface GroupStateModel {
     groups: GroupVM[];
     detail: GroupDetail;
     error: GettingGroupError;
     editingSpent: SpentItem | null;
+    editingGroup: BasicGroupVM | null;
 }
 
 export class GettingGroupError {
@@ -43,6 +48,7 @@ const defaultState: GroupStateModel = {
         spents: [],
     },
     editingSpent: null,
+    editingGroup: null,
     error: {
         show: false,
         message: '',
@@ -67,6 +73,15 @@ export class GroupState {
     }
 
     @Selector()
+    static currentUserIsAdmin(state: GroupStateModel) {
+        const currentId = GetCurrentUserId();
+        const userInMembers = state.detail.group?.users.find(
+            (u) => u.id == currentId
+        );
+        return userInMembers?.isAdmin;
+    }
+
+    @Selector()
     static detail(state: GroupStateModel) {
         return state.detail;
     }
@@ -84,6 +99,11 @@ export class GroupState {
     @Selector()
     static editingSpent(state: GroupStateModel) {
         return state.editingSpent;
+    }
+
+    @Selector()
+    static editingGroup(state: GroupStateModel) {
+        return state.editingGroup;
     }
 
     constructor(
@@ -258,5 +278,41 @@ export class GroupState {
         { spent }: SetEditingSpent
     ) {
         ctx.patchState({ editingSpent: spent });
+    }
+
+    @Action(StartGettingBasicGroup)
+    startGettingBasicGroup(
+        ctx: StateContext<GroupStateModel>,
+        { groupId }: StartGettingBasicGroup
+    ) {
+        return this._groupService.getBasicGroup(groupId, true).pipe(
+            tap({
+                next(res) {
+                    ctx.dispatch(new SetEditingGroup(res));
+                },
+            })
+        );
+    }
+
+    @Action(SetEditingGroup)
+    setEditingGroup(
+        ctx: StateContext<GroupStateModel>,
+        { group }: SetEditingGroup
+    ) {
+        ctx.patchState({ editingGroup: group });
+    }
+
+    @Action(StartEditingGroup)
+    startEditingGroup(
+        ctx: StateContext<GroupStateModel>,
+        { groupId, body }: StartEditingGroup
+    ) {
+        return this._groupService.editGroup(groupId, body).pipe(
+            take(1),
+            tap((_) => {
+                this._toastr.success('Grupo editado', '🎉');
+                ctx.dispatch(new StartGettingGroups(''));
+            })
+        );
     }
 }

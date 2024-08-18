@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { UserVM } from '@app/models/view-models';
+import { GroupMemberVM } from '@app/models/view-models';
 
 @Component({
     selector: 'app-avatar-group',
@@ -7,7 +7,7 @@ import { UserVM } from '@app/models/view-models';
     styleUrls: ['./avatar-group.component.scss'],
 })
 export class AvatarGroupComponent implements OnInit {
-    @Input() users: UserVM[] = [];
+    @Input() users: GroupMemberVM[] = [];
     constructor() {}
 
     ngOnInit() {}

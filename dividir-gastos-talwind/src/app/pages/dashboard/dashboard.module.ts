@@ -30,7 +30,7 @@ import { NgxSpinnerModule } from 'ngx-spinner';
             required: 'Este campo es requerido',
             email: 'El email no es valido',
             passwordConfirmation: 'Las contraseñas no coinciden',
-            maxlength: 'El campo no puede tener más de 50 caracteres',
+            maxlength: 'El campo no puede tener más de 100 caracteres',
         }),
         NgxSpinnerModule,
     ],

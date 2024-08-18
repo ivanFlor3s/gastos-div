@@ -18,6 +18,9 @@ export class GroupContainerComponent implements OnInit {
     @Select(GroupState.detail) groupDetail$: Observable<GroupDetail>;
     @Select(GroupState.spentsInDetail) spents$: Observable<SpentItem[]>;
 
+    @Select(GroupState.currentUserIsAdmin)
+    currentUserIsAdmin$: Observable<boolean>;
+
     constructor(
         private store: Store,
         private activatedRoute: ActivatedRoute,

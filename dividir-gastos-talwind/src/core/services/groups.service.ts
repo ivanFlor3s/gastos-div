@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
+import { Params } from '@angular/router';
 import { CreateGroupRequest } from '@app/interfaces';
-import { GroupVM } from '@app/models/view-models';
+import { BasicGroupVM, GroupVM } from '@app/models/view-models';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -25,5 +26,20 @@ export class GroupsService {
         return this._http.get<GroupVM>(
             `${environment.API_URL}/group/${groupId}`
         );
+    }
+
+    getBasicGroup(
+        groupId: number,
+        excludeMySelf: boolean
+    ): Observable<BasicGroupVM> {
+        const params: Params = { excludeCurrentUser: excludeMySelf.toString() };
+        return this._http.get<BasicGroupVM>(
+            `${environment.API_URL}/group/${groupId}/basic`,
+            { params }
+        );
+    }
+
+    editGroup(groupId: number, body: CreateGroupRequest) {
+        return this._http.put(`${environment.API_URL}/group/${groupId}`, body);
     }
 }
