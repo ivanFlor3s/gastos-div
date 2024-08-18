@@ -35,7 +35,21 @@ namespace ApiGastos.Controllers
                 .ThenInclude(groupUserDb => groupUserDb.AppUser)
                 .Include(group => group.Spents)
                 .ToListAsync();
-            return mapper.Map<List<GroupResponse>>(groups);   
+
+
+            var mappedGroups = mapper.Map<List<GroupResponse>>(groups);   
+
+            foreach (var group in mappedGroups)
+            {
+                var user = group.Users.FirstOrDefault(u => u.Id == User.Identity.GetId());
+                if (user != null)
+                {
+                    group.IsAdmin = user.IsAdmin;
+                }
+                group.TotalSpent = group.Spents.Sum(spent => spent.Amount);
+            }
+
+            return mappedGroups;    
         }
 
         // GET api/<GroupController>/5

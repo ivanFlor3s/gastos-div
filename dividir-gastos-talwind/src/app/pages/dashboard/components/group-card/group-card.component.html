@@ -16,17 +16,32 @@
                     {{ group.description }}
                 </p>
             </div>
-
-            <span
-                (click)="edit($event)"
-                class="fas fa-pen text-indigo-300 hover:text-indigo-500 relative z-10"></span>
+            <ng-container *ngIf="group.isAdmin">
+                <span
+                    (click)="edit($event)"
+                    class="fas fa-pen text-indigo-300 hover:text-indigo-500 relative z-10"></span>
+            </ng-container>
         </div>
         <div class="flex flex-row justify-between mt-auto">
             <span>
                 {{ group.users.length }}
                 {{ group.users.length > 1 ? 'participantes' : 'participante' }}
             </span>
-            <span>$400</span>
+            <ng-container *ngIf="group.totalSpent; else elseTemplate">
+                <span class="text-lg text-teal-600 font-semibold">
+                    {{ group.totalSpent | currency }}
+                </span>
+            </ng-container>
+            <ng-template #elseTemplate>
+                <a
+                    class="text-xs text-blue-400"
+                    href="https://x.com/search?q=%23NoHayPlata&src=typed_query"
+                    target="_blank"
+                    rel="noopener"
+                    click-stop-propagation>
+                    #No hay plata 😿
+                </a>
+            </ng-template>
         </div>
     </div>
 </div>
