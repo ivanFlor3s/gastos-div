@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BasicGroupVM, GroupVM } from '@app/models/view-models';
 import { GroupsService, SpentsService } from '@core/services';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
     AddGroup,
     DeleteSpent,
@@ -23,6 +23,7 @@ import { GettingGroupErrorType } from '@app/interfaces/getting-group-error';
 import { GroupDetail } from '@app/interfaces/group.detail';
 import { ToastrService } from 'ngx-toastr';
 import { SpentItem } from '@app/models/dtos';
+import { GetCurrentUserId } from '@core/utils';
 
 export interface GroupStateModel {
     groups: GroupVM[];
@@ -69,6 +70,15 @@ export class GroupState {
     @Selector()
     static error(state: GroupStateModel) {
         return state.error?.show ? state.error : null;
+    }
+
+    @Selector()
+    static currentUserIsAdmin(state: GroupStateModel) {
+        const currentId = GetCurrentUserId();
+        const userInMembers = state.detail.group?.users.find(
+            (u) => u.id == currentId
+        );
+        return userInMembers?.isAdmin;
     }
 
     @Selector()
