@@ -1,4 +1,4 @@
-import { UserVM } from '@app/models/view-models';
+import { GroupMemberVM, UserVM } from '@app/models/view-models';
 
 export interface SpentItem {
     id: number;
@@ -10,5 +10,5 @@ export interface SpentItem {
     authorId: string;
     author: UserVM;
     payedAt: Date;
-    participants: UserVM[];
+    participants: GroupMemberVM[];
 }

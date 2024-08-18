@@ -1,6 +1,12 @@
 <div
     [ngbTooltip]="user.firstName + ' ' + user.lastName"
-    class="border border-slate-400 relative inline-flex items-center justify-center w-8 h-8 overflow-hidden bg-gray-100 rounded-full dark:bg-gray-600">
+    class="border border-slate-400 relative inline-flex items-center justify-center w-8 h-8 bg-gray-100 rounded-full dark:bg-gray-600">
+    <ng-container *ngIf="showAdminIcon && user.isAdmin">
+        <span class="text-amber-500 absolute bottom-4 left-4">
+            <i class="text-xs fas fa-crown"></i>
+        </span>
+    </ng-container>
+
     <span class="font-medium text-gray-600 dark:text-gray-300">
         {{ avatarName }}
     </span>

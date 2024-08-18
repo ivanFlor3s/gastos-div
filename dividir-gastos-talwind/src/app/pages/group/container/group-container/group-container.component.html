@@ -48,10 +48,13 @@
                 <div class="flex gap-1 items-center flex-wrap">
                     <app-avatar
                         *ngFor="let user of detail.group?.users"
-                        [user]="user"></app-avatar>
-                    <span class="text-blue-500 cursor-pointer">
-                        Agregar miembro
-                    </span>
+                        [user]="user"
+                        [showAdminIcon]="user.isAdmin"></app-avatar>
+                    <ng-container *ngIf="currentUserIsAdmin$ | async">
+                        <span class="text-blue-500 cursor-pointer">
+                            Agregar miembro
+                        </span>
+                    </ng-container>
                 </div>
             </section>
 

@@ -1,5 +1,5 @@
 import { SpentItem } from '../dtos';
-import { UserVM } from './user.vm';
+import { GroupMemberVM } from './group-member';
 
 export interface GroupVM {
     id: number;
@@ -7,6 +7,8 @@ export interface GroupVM {
     description: string;
     createdAt: string;
     imageUrl: string;
-    users: UserVM[];
+    isAdmin: boolean;
+    users: GroupMemberVM[];
     spents: SpentItem[];
+    totalSpent: number;
 }

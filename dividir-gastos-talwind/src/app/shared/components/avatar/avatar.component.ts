@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { UserVM } from '@app/models/view-models';
+import { GroupMemberVM } from '@app/models/view-models';
 
 @Component({
     selector: 'app-avatar',
@@ -7,8 +7,9 @@ import { UserVM } from '@app/models/view-models';
     styleUrls: ['./avatar.component.css'],
 })
 export class AvatarComponent implements OnInit {
-    @Input() user: UserVM;
+    @Input() user: GroupMemberVM;
     @Input() borderClass: string;
+    @Input() showAdminIcon: boolean;
 
     avatarName: string;
 
