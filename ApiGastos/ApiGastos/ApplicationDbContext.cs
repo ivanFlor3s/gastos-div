@@ -2,6 +2,7 @@
 using ApiGastos.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace ApiGastos
 {
@@ -41,7 +42,28 @@ namespace ApiGastos
 
             modelBuilder.Entity<Group>()
                 .HasQueryFilter(g => g.GroupUsers.Any(gu => gu.AppUserId == _httpContextAccessor.HttpContext.User.Identity.GetId()));
+
+
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                if (typeof(SoftDeleteEntity).IsAssignableFrom(entityType.ClrType))
+                {
+                    var method = SetSoftDeleteFilterMethod.MakeGenericMethod(entityType.ClrType);
+                    method.Invoke(this, new object[] { modelBuilder });
+                }
+            }
+
+
         }
+
+        private static readonly MethodInfo SetSoftDeleteFilterMethod =
+        typeof(ApplicationDbContext).GetMethod(nameof(SetSoftDeleteFilter), BindingFlags.NonPublic | BindingFlags.Static);
+
+        private static void SetSoftDeleteFilter<TEntity>(ModelBuilder modelBuilder) where TEntity : SoftDeleteEntity
+        {
+            modelBuilder.Entity<TEntity>().HasQueryFilter(e => !e.IsDeleted);
+        }
+
 
         public override int SaveChanges()
         {
@@ -52,6 +74,7 @@ namespace ApiGastos
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             UpdateAuditFields();
+            UpdateSoftDeleteFields();
             return base.SaveChangesAsync(cancellationToken);
         }
 
@@ -73,6 +96,20 @@ namespace ApiGastos
 
                 auditable.LastModified = DateTime.UtcNow;
                 auditable.LastModifiedBy = _httpContextAccessor.HttpContext.User.Identity.GetId();
+            }
+        }
+
+        private void UpdateSoftDeleteFields()
+        {
+            var entries = ChangeTracker
+                .Entries()
+                .Where(e => e.Entity is SoftDeleteEntity && e.State == EntityState.Deleted);
+            foreach (var entry in entries)
+            {
+                var softDeleteEntity = (SoftDeleteEntity)entry.Entity;
+                softDeleteEntity.IsDeleted = true;
+                softDeleteEntity.DeletedAt = DateTime.UtcNow;
+                softDeleteEntity.DeletedById = _httpContextAccessor.HttpContext.User.Identity.GetId();
             }
         }
 
