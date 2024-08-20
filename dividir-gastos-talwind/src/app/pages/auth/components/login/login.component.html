@@ -9,8 +9,7 @@
                     id="email"
                     formControlName="email"
                     autocomplete="off"
-                    type="text"
-                />
+                    type="text" />
             </div>
             <div class="flex flex-col">
                 <label for="password" class="text-xs mb-1">Contraseña</label>
@@ -18,17 +17,18 @@
                     class="td-form-control"
                     formControlName="password"
                     id="password"
-                    type="password"
-                />
+                    type="password" />
             </div>
             <div
-                class="flex flex-col gap-3 justify-center sm:flex-row sm:justify-between sm:items-end"
-            >
-                <a href="#" routerLink="../register"> Registrar </a>
+                class="flex flex-col gap-3 justify-center sm:flex-row sm:justify-between sm:items-end">
+                <a href="#" routerLink="../register">Registrar</a>
                 <button type="submit" class="td-btn-primary rounded-full">
                     Ingresar
                 </button>
             </div>
+        </div>
+        <div class="text-start mt-4">
+            <app-google-button></app-google-button>
         </div>
     </div>
 </form>
