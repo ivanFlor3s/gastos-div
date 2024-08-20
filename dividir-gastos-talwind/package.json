@@ -24,7 +24,7 @@
     "@ngxs/storage-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
     "@popperjs/core": "^2.11.6",
-    "angular-auth-oidc-client": "^16.0.2",
+    "angular-oauth2-oidc": "^16.0.0",
     "bootstrap": "^5.2.3",
     "jwt-decode": "^3.1.2",
     "luxon": "^3.4.0",
