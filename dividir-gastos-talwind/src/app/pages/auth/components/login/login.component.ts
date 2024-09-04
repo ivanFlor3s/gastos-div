@@ -4,7 +4,7 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AppState, Login } from '@core/state';
+import { AppState, Login, StartGoogleAuthentication } from '@core/state';
 import { take } from 'rxjs';
 import { GoogleCredentials } from '@app/interfaces';
 
@@ -61,7 +61,10 @@ export class LoginComponent {
                 '579234068570-8puotsfbni256pq4soousncsg6tdbkb9.apps.googleusercontent.com',
             callback: (response: GoogleAuthResponse) => {
                 console.log(response);
-                this.decodeToken(response.credential);
+                const googleCreds = this.decodeToken(response.credential);
+                this._store.dispatch(
+                    new StartGoogleAuthentication(googleCreds)
+                );
             },
         });
 
@@ -79,10 +82,10 @@ export class LoginComponent {
         });
     }
 
-    private decodeToken(token: string): any {
+    private decodeToken(token: string): GoogleCredentials {
         const decoded: GoogleCredentials = JSON.parse(
             atob(token.split('.')[1])
         );
-        console.log(decoded);
+        return decoded;
     }
 }
