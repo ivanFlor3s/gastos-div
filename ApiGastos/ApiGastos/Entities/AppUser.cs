@@ -13,7 +13,8 @@ namespace ApiGastos.Entities
         public string LastName { get; set; }
         public List<GroupUser> GroupUsers { get; set; }
         public List<SpentParticipant> SpentParticipants { get; set; } = new List<SpentParticipant>();
-
+        public bool GoogleSignedIn { get; set; }
+        public string ImageUrl { get; set; }    
 
     }
 }

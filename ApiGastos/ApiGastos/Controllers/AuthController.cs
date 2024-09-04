@@ -108,6 +108,29 @@ namespace ApiGastos.Controllers
             };
         }
 
+        [HttpPost("signInWithGoogle")]
+        public async Task<ActionResult<AuthenticationResponse>> SignInWithGoogle(GoogleUserCreationDto userCreationDTO)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(user => user.Email == userCreationDTO.Email);
+            if(user != null)
+            {
+                return await BuildToken(new UserCredentialsDto { Email = userCreationDTO.Email });
+            }
+           
+            var userMapped = mapper.Map<AppUser>(userCreationDTO);
+            userMapped.GoogleSignedIn = true;   
+
+            var result = await userManager.CreateAsync(userMapped, userCreationDTO.Password);
+
+            if (result.Succeeded)
+            {
+                return await BuildToken(new UserCredentialsDto { Email = userCreationDTO.Email, Password = userCreationDTO.Password });
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
 
     }
 }
