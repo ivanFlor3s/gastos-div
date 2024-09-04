@@ -15,6 +15,7 @@ import { UserVM } from '@app/models/view-models';
 import { UserCreationDto } from '@app/models/dtos';
 import { GoogleUserCreationDto } from '../../../app/models/dtos/google-user-creation.dto';
 import { Helper } from '@core/utils';
+import { Router } from '@angular/router';
 
 const CLAIM_BASE = 'http://schemas.xmlsoap.org/ws/2005/05/identity/claims';
 
@@ -62,7 +63,8 @@ export class AppState {
 
     constructor(
         private _authService: AuthService,
-        private _userService: UsersService
+        private _userService: UsersService,
+        private _router: Router
     ) {}
 
     @Action(Login)
@@ -113,6 +115,7 @@ export class AppState {
                 }`,
             },
         });
+        this._router.navigate(['/dashboard']);
     }
 
     @Action(Logout)
