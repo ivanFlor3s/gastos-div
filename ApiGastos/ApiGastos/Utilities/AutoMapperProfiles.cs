@@ -59,7 +59,8 @@ namespace ApiGastos.Utilities
                .ForMember(opts => opts.IsAdmin, act => act.MapFrom(src => src.IsAdmin))
                .ForMember(opts => opts.Email, act => act.MapFrom(src => src.AppUser.Email));
 
-
+            CreateMap<GoogleUserCreationDto, AppUser>()
+                  .ForMember(dest => dest.UserName, act => act.MapFrom(src => src.Email));
         }
         
     }
