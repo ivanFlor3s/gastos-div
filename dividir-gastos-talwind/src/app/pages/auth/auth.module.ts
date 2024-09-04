@@ -5,12 +5,14 @@ import { RegisterComponent, LoginComponent } from './components';
 import { AuthRoutes } from './auth.routing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ErrorsModule } from '../../../core/errors/errors.module';
+import { GoogleButtonComponent } from '@app/shared/standalone';
 
 @NgModule({
     declarations: [AuthContainerComponent, RegisterComponent, LoginComponent],
     imports: [
         CommonModule,
         AuthRoutes,
+        GoogleButtonComponent,
         ReactiveFormsModule,
         ErrorsModule.forRoot({
             required: 'Este campo es requerido',
