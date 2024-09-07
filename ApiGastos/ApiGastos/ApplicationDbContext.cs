@@ -1,4 +1,5 @@
-﻿using ApiGastos.Entities;
+﻿using ApiGastos.Core.Share.Enums;
+using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +29,8 @@ namespace ApiGastos
                 .HasConversion<int>()
                 .HasDefaultValue(SpentMode.EQUALLY);
 
-            modelBuilder.Entity<SpentParticipant>().HasKey(sp => new { sp.SpentId, sp.UserId});
-            
+            modelBuilder.Entity<SpentParticipant>().HasKey(sp => new { sp.SpentId, sp.UserId });
+
             modelBuilder.Entity<SpentParticipant>()
             .HasOne(sp => sp.Spent)
             .WithMany(s => s.Participants)
@@ -42,6 +43,15 @@ namespace ApiGastos
 
             modelBuilder.Entity<Group>()
                 .HasQueryFilter(g => g.GroupUsers.Any(gu => gu.AppUserId == _httpContextAccessor.HttpContext.User.Identity.GetId()));
+
+            modelBuilder.Entity<Invitation>()
+               .HasOne(i => i.Group)
+               .WithMany(g => g.Invitations)
+               .HasForeignKey(i => i.GroupId);
+
+            modelBuilder.Entity<Invitation>()
+                .Property(i => i.InvitationStatus)
+                .HasDefaultValue(InvitationStatus.PENDING);
 
 
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
@@ -117,5 +127,6 @@ namespace ApiGastos
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupUser> GroupUsers { get; set; }
         public DbSet<Spent> Spent{ get; set; }
+        public DbSet<Invitation> Invitations { get; set;}
     }
 }
