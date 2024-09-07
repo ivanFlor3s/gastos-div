@@ -1,4 +1,5 @@
-﻿using ApiGastos.Dtos;
+﻿using ApiGastos.Core.Share.Enums;
+using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
@@ -117,12 +118,36 @@ namespace ApiGastos.Controllers
             var id = User.Identity.GetId();
 
             var grupo = mapper.Map<Group>(groupDto);
-            grupo.GroupUsers = new List<GroupUser> { new GroupUser { AppUserId = id  } };
+            grupo.GroupUsers = new List<GroupUser> { new() { AppUserId = id  } };
             grupo.CreatedBy = id;
             
             context.Add(grupo);
-            await context.SaveChangesAsync();
+            
+            groupDto.Emails.ForEach( async email =>
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    var groupUser = new GroupUser
+                    {
+                        AppUserId = user.Id,
+                    };
+                    grupo.GroupUsers.Add(groupUser);
+                }
+                else
+                {
+                    var invitation = new Invitation
+                    {
+                        Email = email,
+                        Group = grupo,
+                        CreatedBy = id,
+                        InvitationStatus = InvitationStatus.PENDING
+                    };
+                    context.Add(invitation);    
+                }
+            });
 
+            await context.SaveChangesAsync();
             var result = mapper.Map<GroupResponse>(grupo);
 
             return Ok(result);

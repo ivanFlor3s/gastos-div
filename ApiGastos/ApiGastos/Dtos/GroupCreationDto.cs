@@ -13,5 +13,6 @@ namespace ApiGastos.Dtos
         public string Description { get; set; } = string.Empty;
 
         public string ImageUrl { get; set; } = string.Empty;
+        public List<string> Emails { get; set; } = new List<string>();
     }
 }
