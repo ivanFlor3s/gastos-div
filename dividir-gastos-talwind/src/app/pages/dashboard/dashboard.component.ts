@@ -2,11 +2,7 @@ import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgregarGastoComponent, NewGroupComponent } from './components';
 import { Select, Store } from '@ngxs/store';
-import {
-    GroupState,
-    StartGettingGroups,
-    StartRetrievingGroups,
-} from '@core/state';
+import { GroupState, StartGettingGroups } from '@core/state';
 import { GroupVM } from '@app/models/view-models';
 import { Observable } from 'rxjs';
 
@@ -23,7 +19,7 @@ export class DashboardComponent {
     filter = '';
 
     constructor(private modalService: NgbModal) {
-        this._store.dispatch(new StartRetrievingGroups());
+        this._store.dispatch(new StartGettingGroups(''));
     }
 
     searchGroups(filter: string) {

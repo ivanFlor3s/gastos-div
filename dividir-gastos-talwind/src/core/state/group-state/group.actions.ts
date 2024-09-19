@@ -61,7 +61,3 @@ export class StartEditingGroup {
     static readonly type = '[Groups] StartEditingGroup';
     constructor(public groupId: number, public body: CreateGroupRequest) {}
 }
-
-export class StartRetrievingGroups {
-    static readonly type = '[Groups] StartRetrievingGroups';
-}
