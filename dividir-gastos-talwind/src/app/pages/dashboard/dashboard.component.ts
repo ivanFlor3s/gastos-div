@@ -2,10 +2,13 @@ import { Component, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AgregarGastoComponent, NewGroupComponent } from './components';
 import { Select, Store } from '@ngxs/store';
-import { GroupState, StartGettingGroups } from '@core/state';
+import {
+    GroupState,
+    StartGettingGroups,
+    StartRetrievingGroups,
+} from '@core/state';
 import { GroupVM } from '@app/models/view-models';
 import { Observable } from 'rxjs';
-import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
     selector: 'app-dashboard',
@@ -20,7 +23,7 @@ export class DashboardComponent {
     filter = '';
 
     constructor(private modalService: NgbModal) {
-        this._store.dispatch(new StartGettingGroups(''));
+        this._store.dispatch(new StartRetrievingGroups());
     }
 
     searchGroups(filter: string) {
