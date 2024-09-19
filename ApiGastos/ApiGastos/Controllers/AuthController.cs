@@ -114,22 +114,34 @@ namespace ApiGastos.Controllers
             var user = await context.Users.FirstOrDefaultAsync(user => user.Email == userCreationDTO.Email);
             if(user != null)
             {
+                if (user.IsTemporal)
+                {
+                    user.FirstName = userCreationDTO.FirstName;
+                    user.LastName = userCreationDTO.LastName;
+                    user.IsTemporal = false;
+                    await context.SaveChangesAsync();  
+                }
+
                 return await BuildToken(new UserCredentialsDto { Email = userCreationDTO.Email });
-            }
-           
-            var userMapped = mapper.Map<AppUser>(userCreationDTO);
-            userMapped.GoogleSignedIn = true;   
 
-            var result = await userManager.CreateAsync(userMapped, userCreationDTO.Password);
-
-            if (result.Succeeded)
-            {
-                return await BuildToken(new UserCredentialsDto { Email = userCreationDTO.Email, Password = userCreationDTO.Password });
             }
             else
             {
-                return BadRequest(result.Errors);
+                var userMapped = mapper.Map<AppUser>(userCreationDTO);
+                userMapped.GoogleSignedIn = true;
+
+                var result = await userManager.CreateAsync(userMapped, userCreationDTO.Password);
+
+                if (result.Succeeded)
+                {
+                    return await BuildToken(new UserCredentialsDto { Email = userCreationDTO.Email, Password = userCreationDTO.Password });
+                }
+                else
+                {
+                    return BadRequest(result.Errors);
+                }
             }
+            
         }
 
     }
