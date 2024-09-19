@@ -3,6 +3,7 @@ using System;
 using ApiGastos;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ApiGastos.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240904020155_add_invitations")]
+    partial class add_invitations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,10 +53,8 @@ namespace ApiGastos.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("ImageUrl")
+                        .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<bool>("IsTemporal")
-                        .HasColumnType("boolean");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -157,6 +158,7 @@ namespace ApiGastos.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("DeletedById")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("IsAdmin")
@@ -170,6 +172,47 @@ namespace ApiGastos.Migrations
                     b.HasIndex("AppUserId");
 
                     b.ToTable("GroupUsers");
+                });
+
+            modelBuilder.Entity("ApiGastos.Entities.Invitation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("InvitationStatus")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("ApiGastos.Entities.Spent", b =>
@@ -391,6 +434,17 @@ namespace ApiGastos.Migrations
                     b.Navigation("Group");
                 });
 
+            modelBuilder.Entity("ApiGastos.Entities.Invitation", b =>
+                {
+                    b.HasOne("ApiGastos.Entities.Group", "Group")
+                        .WithMany("Invitations")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("ApiGastos.Entities.Spent", b =>
                 {
                     b.HasOne("ApiGastos.Entities.AppUser", "Author")
@@ -490,6 +544,8 @@ namespace ApiGastos.Migrations
             modelBuilder.Entity("ApiGastos.Entities.Group", b =>
                 {
                     b.Navigation("GroupUsers");
+
+                    b.Navigation("Invitations");
 
                     b.Navigation("Spents");
                 });

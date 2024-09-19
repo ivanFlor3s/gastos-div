@@ -1,4 +1,5 @@
-﻿using ApiGastos.Entities;
+﻿using ApiGastos.Core.Share.Enums;
+using ApiGastos.Entities;
 using ApiGastos.Helpers;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -28,8 +29,8 @@ namespace ApiGastos
                 .HasConversion<int>()
                 .HasDefaultValue(SpentMode.EQUALLY);
 
-            modelBuilder.Entity<SpentParticipant>().HasKey(sp => new { sp.SpentId, sp.UserId});
-            
+            modelBuilder.Entity<SpentParticipant>().HasKey(sp => new { sp.SpentId, sp.UserId });
+
             modelBuilder.Entity<SpentParticipant>()
             .HasOne(sp => sp.Spent)
             .WithMany(s => s.Participants)

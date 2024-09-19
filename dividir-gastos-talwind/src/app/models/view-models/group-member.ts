@@ -4,4 +4,5 @@ export interface GroupMemberVM {
     firstName: string;
     lastName: string;
     isAdmin: boolean;
+    isTemporal: boolean;
 }

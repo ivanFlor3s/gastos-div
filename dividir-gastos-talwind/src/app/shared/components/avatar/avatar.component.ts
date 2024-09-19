@@ -9,7 +9,9 @@ import { GroupMemberVM } from '@app/models/view-models';
 export class AvatarComponent implements OnInit {
     @Input() user: GroupMemberVM;
     @Input() borderClass: string;
+
     @Input() showAdminIcon: boolean;
+    @Input() showTemporalIcon: boolean;
 
     avatarName: string;
 
@@ -18,7 +20,14 @@ export class AvatarComponent implements OnInit {
     ngOnInit() {}
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.avatarName =
-            this.user?.firstName?.charAt(0) + this.user?.lastName?.charAt(0);
+        this.setAvatarName();
+    }
+
+    private setAvatarName() {
+        const avatar2letters =
+            this.user.firstName.charAt(0) + this.user.lastName.charAt(0);
+        this.avatarName = !this.user.isTemporal
+            ? avatar2letters.toUpperCase()
+            : this.user.email.charAt(0).toUpperCase();
     }
 }

@@ -5,6 +5,7 @@ using ApiGastos.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,26 +20,29 @@ namespace ApiGastos.Controllers
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public GroupController(IMapper mapper, ApplicationDbContext context)
+        public GroupController(IMapper mapper, ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             this.mapper = mapper;
             this.context = context;
+            _userManager = userManager;
         }
 
         // GET: api/<GroupController>
         [HttpGet]
         public async Task<List<GroupResponse>> Get()
         {
+
             var groups = await this.context.Groups
                 .Include(groupDb => groupDb.GroupUsers)
                 .ThenInclude(groupUserDb => groupUserDb.AppUser)
                 .Include(group => group.Spents)
                 .ToListAsync();
 
+            var mappedGroups = mapper.Map<List<GroupResponse>>(groups);
 
-            var mappedGroups = mapper.Map<List<GroupResponse>>(groups);   
-
+            #region Add isAdmin and TotalSpent to GroupResponse 
             foreach (var group in mappedGroups)
             {
                 var user = group.Users.FirstOrDefault(u => u.Id == User.Identity.GetId());
@@ -48,8 +52,9 @@ namespace ApiGastos.Controllers
                 }
                 group.TotalSpent = group.Spents.Sum(spent => spent.Amount);
             }
+            #endregion 
 
-            return mappedGroups;    
+            return mappedGroups;
         }
 
         // GET api/<GroupController>/5
@@ -88,7 +93,7 @@ namespace ApiGastos.Controllers
                     {
                         Id = g.Id,
                         Name = g.Name,
-                        Description = g.Description,    
+                        Description = g.Description,
                         CreatedAt = g.CreatedAt,
                         GroupUsers = g.GroupUsers.Where(gu => gu.AppUserId != User.Identity.GetId()).ToList()
                     });
@@ -117,12 +122,49 @@ namespace ApiGastos.Controllers
             var id = User.Identity.GetId();
 
             var grupo = mapper.Map<Group>(groupDto);
-            grupo.GroupUsers = new List<GroupUser> { new GroupUser { AppUserId = id  } };
+            grupo.GroupUsers = new List<GroupUser> { new() { AppUserId = id, IsAdmin = true } };
             grupo.CreatedBy = id;
-            
-            context.Add(grupo);
-            await context.SaveChangesAsync();
 
+            context.Add(grupo);
+
+            #region Add users to group + Create Invitations
+            foreach (var email in groupDto.Emails)
+            {
+                var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                if (user != null)
+                {
+                    var groupUser = new GroupUser
+                    {
+                        AppUserId = user.Id,
+                    };
+                    grupo.GroupUsers.Add(groupUser);
+                }
+                else
+                {
+                    var usuario = new UserCreationDTO
+                    {
+                        Email = email,
+                        FirstName = "Guess",
+                        LastName = "Temporal"
+                    };
+                    var userCreation = mapper.Map<AppUser>(usuario);
+                    userCreation.IsTemporal = true;
+                    var res = await _userManager.CreateAsync(userCreation, "$DumpTest123");
+                    
+                    if (res.Succeeded)
+                    {
+                        var groupUser = new GroupUser
+                        {
+                            AppUserId = userCreation.Id,
+                        };
+                        grupo.GroupUsers.Add(groupUser);
+                    }   
+
+                }
+            }
+            #endregion
+
+            await context.SaveChangesAsync();
             var result = mapper.Map<GroupResponse>(grupo);
 
             return Ok(result);
@@ -136,13 +178,13 @@ namespace ApiGastos.Controllers
                 .Include(group => group.GroupUsers)
                     .ThenInclude(groupUser => groupUser.AppUser)
                 .Where(group => group.Id == id)
-                .FirstOrDefault();   
+                .FirstOrDefault();
 
             if (groupFromDb == null)
             {
                 return NotFound();
             }
-            
+
             groupFromDb.Name = groupDto.Name;
             groupFromDb.Description = groupDto.Description;
 
@@ -156,5 +198,9 @@ namespace ApiGastos.Controllers
         public void Delete(int id)
         {
         }
+
+        
+    
     }
+
 }

@@ -14,7 +14,7 @@ namespace ApiGastos.Dtos.Responses
         public DateTime PayedAt { get; set; }
         public DateTime CreatedAt { get; set; }
         public SpentMode SpentMode { get; set; }
-        public List<AppUserResponse> Participants { get; set; }
+        public List<GroupMemberResponse> Participants { get; set; }
 
     }
 }
