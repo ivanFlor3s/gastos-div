@@ -5,6 +5,7 @@ using ApiGastos.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,11 +20,13 @@ namespace ApiGastos.Controllers
     {
         private readonly IMapper mapper;
         private readonly ApplicationDbContext context;
+        private readonly UserManager<AppUser> _userManager;
 
-        public GroupController(IMapper mapper, ApplicationDbContext context)
+        public GroupController(IMapper mapper, ApplicationDbContext context, UserManager<AppUser> userManager)
         {
             this.mapper = mapper;
             this.context = context;
+            _userManager = userManager;
         }
 
         // GET: api/<GroupController>
@@ -125,7 +128,7 @@ namespace ApiGastos.Controllers
             context.Add(grupo);
 
             #region Add users to group + Create Invitations
-            groupDto.Emails.ForEach(async email =>
+            foreach (var email in groupDto.Emails)
             {
                 var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
                 if (user != null)
@@ -138,17 +141,27 @@ namespace ApiGastos.Controllers
                 }
                 else
                 {
-                    // TODO Create temp user
-                    //var invitation = new Invitation
-                    //{
-                    //    Email = email,
-                    //    Group = grupo,
-                    //    CreatedBy = id,
-                    //    InvitationStatus = InvitationStatus.PENDING
-                    //};
-                    //context.Invitations.Add(invitation);
+                    var usuario = new UserCreationDTO
+                    {
+                        Email = email,
+                        FirstName = "Guess",
+                        LastName = "Temporal"
+                    };
+                    var userCreation = mapper.Map<AppUser>(usuario);
+                    userCreation.IsTemporal = true;
+                    var res = await _userManager.CreateAsync(userCreation, "$DumpTest123");
+                    
+                    if (res.Succeeded)
+                    {
+                        var groupUser = new GroupUser
+                        {
+                            AppUserId = userCreation.Id,
+                        };
+                        grupo.GroupUsers.Add(groupUser);
+                    }   
+
                 }
-            });
+            }
             #endregion
 
             await context.SaveChangesAsync();
