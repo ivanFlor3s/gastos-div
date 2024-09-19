@@ -9,7 +9,9 @@ import { GroupMemberVM } from '@app/models/view-models';
 export class AvatarComponent implements OnInit {
     @Input() user: GroupMemberVM;
     @Input() borderClass: string;
+
     @Input() showAdminIcon: boolean;
+    @Input() showTemporalIcon: boolean;
 
     avatarName: string;
 

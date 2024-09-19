@@ -49,7 +49,8 @@
                     <app-avatar
                         *ngFor="let user of detail.group?.users"
                         [user]="user"
-                        [showAdminIcon]="user.isAdmin"></app-avatar>
+                        [showTemporalIcon]="true"
+                        [showAdminIcon]="true"></app-avatar>
                     <ng-container *ngIf="currentUserIsAdmin$ | async">
                         <span class="text-blue-500 cursor-pointer">
                             Agregar miembro
