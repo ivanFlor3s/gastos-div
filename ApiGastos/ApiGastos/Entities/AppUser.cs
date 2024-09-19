@@ -15,6 +15,7 @@ namespace ApiGastos.Entities
         public List<SpentParticipant> SpentParticipants { get; set; } = new List<SpentParticipant>();
         public bool GoogleSignedIn { get; set; }
         public string ImageUrl { get; set; }    
+        public bool IsTemporal { get; set;}
 
     }
 }

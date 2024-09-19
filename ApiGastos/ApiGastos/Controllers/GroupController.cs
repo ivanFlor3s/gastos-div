@@ -1,5 +1,4 @@
-﻿using ApiGastos.Core.Share.Enums;
-using ApiGastos.Dtos;
+﻿using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
 using ApiGastos.Entities;
 using ApiGastos.Helpers;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Principal;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -39,8 +37,6 @@ namespace ApiGastos.Controllers
                 .Include(group => group.Spents)
                 .ToListAsync();
 
-
-
             var mappedGroups = mapper.Map<List<GroupResponse>>(groups);
 
             #region Add isAdmin and TotalSpent to GroupResponse 
@@ -53,12 +49,7 @@ namespace ApiGastos.Controllers
                 }
                 group.TotalSpent = group.Spents.Sum(spent => spent.Amount);
             }
-            #endregion
-
-
-
-
-
+            #endregion 
 
             return mappedGroups;
         }
@@ -147,14 +138,15 @@ namespace ApiGastos.Controllers
                 }
                 else
                 {
-                    var invitation = new Invitation
-                    {
-                        Email = email,
-                        Group = grupo,
-                        CreatedBy = id,
-                        InvitationStatus = InvitationStatus.PENDING
-                    };
-                    context.Invitations.Add(invitation);
+                    // TODO Create temp user
+                    //var invitation = new Invitation
+                    //{
+                    //    Email = email,
+                    //    Group = grupo,
+                    //    CreatedBy = id,
+                    //    InvitationStatus = InvitationStatus.PENDING
+                    //};
+                    //context.Invitations.Add(invitation);
                 }
             });
             #endregion
@@ -194,40 +186,7 @@ namespace ApiGastos.Controllers
         {
         }
 
-        [HttpPut("retrieve")]
-        public async Task<IActionResult> JoinInvitedGroups()
-        {
-            var userId = User.Identity.GetId();
-            var emailCurrentUser = User.Identity.GetEmail();
-
-            var groupsInvited = await this.context.Invitations
-                .Include(invitation => invitation.Group)
-                .ThenInclude(group => group.GroupUsers)
-                .Where(invitation => invitation.Email == emailCurrentUser && invitation.InvitationStatus == InvitationStatus.PENDING)
-                .IgnoreQueryFilters()
-                .Select(invitation => invitation.Group)
-                .ToListAsync();
-
-            var invitations = await context.Invitations.Include(x => x.Group).Where(i => i.Email == emailCurrentUser).IgnoreQueryFilters().ToListAsync();
-
-            groupsInvited.ForEach(group =>
-            {
-                group.GroupUsers.Add(new GroupUser
-                {
-                    AppUserId = userId
-                });
-            });
-
-            context.Invitations
-                .Where(i => i.Email == emailCurrentUser)
-                .ExecuteUpdate(i => i
-                    .SetProperty(x => x.InvitationStatus, InvitationStatus.ACCEPTED)
-                    .SetProperty(x =>x.AcceptedAt, DateTime.UtcNow)
-                );
-            
-            await context.SaveChangesAsync();
-            return Ok();
-        }
+        
     
     }
 

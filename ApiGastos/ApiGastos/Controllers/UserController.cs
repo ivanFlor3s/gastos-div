@@ -34,19 +34,19 @@ namespace ApiGastos.Controllers
         }
 
         // POST api/<UserController>
-        [HttpPost]
-        public async Task<IActionResult> Post([FromBody] UserCreationDTO userCreationDto)
-        {
-            //var user = _mapper.Map<AppUser>(userCreationDto);
+        //[HttpPost]
+        //public async Task<IActionResult> Post([FromBody] UserCreationDTO userCreationDto)
+        //{
+        //    //var user = _mapper.Map<AppUser>(userCreationDto);
             
-            //user.CreatedAt = DateTime.UtcNow;
-            //user.UpdatedAt = DateTime.UtcNow;
-            //user.GoogleSingedIn = false;
+        //    //user.CreatedAt = DateTime.UtcNow;
+        //    //user.UpdatedAt = DateTime.UtcNow;
+        //    //user.GoogleSingedIn = false;
             
-            //_context.Add(user);
-            //await _context.SaveChangesAsync();
-            return Ok();
-        }
+        //    //_context.Add(user);
+        //    //await _context.SaveChangesAsync();
+        //    return Ok();
+        //}
 
         // PUT api/<UserController>/5
         [HttpPut("{id}")]

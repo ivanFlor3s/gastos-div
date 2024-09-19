@@ -19,7 +19,6 @@ namespace ApiGastos.Entities
         
         public List<GroupUser> GroupUsers { get; set; }
         public List<Spent> Spents{ get; set; }
-        public List<Invitation> Invitations { get; set; }
 
     }
 }
