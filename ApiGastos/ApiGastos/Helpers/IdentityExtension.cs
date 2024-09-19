@@ -13,5 +13,14 @@ namespace ApiGastos.Helpers
 
             return claim.Value;
         }
+
+        public static string GetEmail(this IIdentity identity)
+        {
+            ClaimsIdentity claimsIdentity = identity as ClaimsIdentity;
+
+            Claim claim = claimsIdentity.FindFirst(ClaimTypes.Email);
+
+            return claim.Value;
+        }
     }
 }
