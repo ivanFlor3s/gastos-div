@@ -42,4 +42,11 @@ export class GroupsService {
     editGroup(groupId: number, body: CreateGroupRequest) {
         return this._http.put(`${environment.API_URL}/group/${groupId}`, body);
     }
+
+    retrieve() {
+        return this._http.put<void>(
+            `${environment.API_URL}/group/retrieve`,
+            {}
+        );
+    }
 }

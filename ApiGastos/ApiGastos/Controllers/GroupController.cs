@@ -1,4 +1,4 @@
-﻿using ApiGastos.Core.Share.Enums;
+using ApiGastos.Core.Share.Enums;
 using ApiGastos.Dtos;
 using ApiGastos.Dtos.Responses;
 using ApiGastos.Entities;
@@ -181,5 +181,42 @@ namespace ApiGastos.Controllers
         public void Delete(int id)
         {
         }
+
+        [HttpPut("retrieve")]
+        public async Task<IActionResult> JoinInvitedGroups()
+        {
+            var userId = User.Identity.GetId();
+            var emailCurrentUser = User.Identity.GetEmail();
+
+            var groupsInvited = await this.context.Invitations
+                .Include(invitation => invitation.Group)
+                .ThenInclude(group => group.GroupUsers)
+                .Where(invitation => invitation.Email == emailCurrentUser && invitation.InvitationStatus == InvitationStatus.PENDING)
+                .IgnoreQueryFilters()
+                .Select(invitation => invitation.Group)
+                .ToListAsync();
+
+            var invitations = await context.Invitations.Include(x => x.Group).Where(i => i.Email == emailCurrentUser).IgnoreQueryFilters().ToListAsync();
+
+            groupsInvited.ForEach(group =>
+            {
+                group.GroupUsers.Add(new GroupUser
+                {
+                    AppUserId = userId
+                });
+            });
+
+            context.Invitations
+                .Where(i => i.Email == emailCurrentUser)
+                .ExecuteUpdate(i => i
+                    .SetProperty(x => x.InvitationStatus, InvitationStatus.ACCEPTED)
+                    .SetProperty(x =>x.AcceptedAt, DateTime.UtcNow)
+                );
+            
+            await context.SaveChangesAsync();
+            return Ok();
+        }
+    
     }
+
 }

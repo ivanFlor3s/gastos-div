@@ -15,6 +15,7 @@ import {
     StartGettingBasicGroup,
     StartGettingGroup,
     StartGettingGroups,
+    StartRetrievingGroups,
 } from './group.actions';
 import { finalize, take, tap } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -311,6 +312,17 @@ export class GroupState {
             take(1),
             tap((_) => {
                 this._toastr.success('Grupo editado', '🎉');
+                ctx.dispatch(new StartGettingGroups(''));
+            })
+        );
+    }
+
+    @Action(StartRetrievingGroups)
+    startRetrievingGroups(ctx: StateContext<GroupStateModel>) {
+        return this._groupService.retrieve().pipe(
+            take(1),
+            tap((_) => {
+                this._toastr.success('Grupos recuperados', '🎉');
                 ctx.dispatch(new StartGettingGroups(''));
             })
         );
