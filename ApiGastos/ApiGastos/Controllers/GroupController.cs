@@ -122,7 +122,7 @@ namespace ApiGastos.Controllers
             var id = User.Identity.GetId();
 
             var grupo = mapper.Map<Group>(groupDto);
-            grupo.GroupUsers = new List<GroupUser> { new() { AppUserId = id } };
+            grupo.GroupUsers = new List<GroupUser> { new() { AppUserId = id, IsAdmin = true } };
             grupo.CreatedBy = id;
 
             context.Add(grupo);
