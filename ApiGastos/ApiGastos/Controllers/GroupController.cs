@@ -195,8 +195,21 @@ namespace ApiGastos.Controllers
 
         // DELETE api/<GroupController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var group = await context.Groups.Include(g => g.GroupUsers).FirstOrDefaultAsync(g => g.Id == id);
+
+            if (group == null)
+            {
+                return NotFound("El grupo no existe.");
+            }
+
+            context.GroupUsers.RemoveRange(group.GroupUsers);
+
+            context.Groups.Remove(group);
+
+            await context.SaveChangesAsync();
+            return Ok();    
         }
 
         
