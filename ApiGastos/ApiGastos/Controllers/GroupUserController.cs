@@ -1,5 +1,4 @@
-﻿using ApiGastos.Dtos.GroupUsers;
-using ApiGastos.Helpers;
+﻿using ApiGastos.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -23,7 +22,7 @@ namespace ApiGastos.Controllers
         }
 
         // GET: api/<GroupUserController>   
-        [HttpDelete("group/{idGroup}/user/{idAppUser")]
+        [HttpDelete("group/{idGroup}/user/{idAppUser}")]
         public async Task<IActionResult> Delete(int idGroup, string idAppUser)
         {
             var groupUser = await this.context.GroupUsers
