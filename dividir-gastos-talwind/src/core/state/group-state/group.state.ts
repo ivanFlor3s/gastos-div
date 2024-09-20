@@ -15,6 +15,7 @@ import {
     StartGettingBasicGroup,
     StartGettingGroup,
     StartGettingGroups,
+    StartRemoveGroup,
 } from './group.actions';
 import { finalize, take, tap } from 'rxjs';
 import { NgxSpinnerService } from 'ngx-spinner';
@@ -311,6 +312,20 @@ export class GroupState {
             take(1),
             tap((_) => {
                 this._toastr.success('Grupo editado', '🎉');
+                ctx.dispatch(new StartGettingGroups(''));
+            })
+        );
+    }
+
+    @Action(StartRemoveGroup)
+    startRemoveGroup(
+        ctx: StateContext<GroupStateModel>,
+        { groupId }: StartRemoveGroup
+    ) {
+        return this._groupService.removeGroup(groupId).pipe(
+            take(1),
+            tap((_) => {
+                this._toastr.success('Grupo eliminado', '🎉');
                 ctx.dispatch(new StartGettingGroups(''));
             })
         );
