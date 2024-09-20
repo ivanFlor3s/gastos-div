@@ -42,4 +42,8 @@ export class GroupsService {
     editGroup(groupId: number, body: CreateGroupRequest) {
         return this._http.put(`${environment.API_URL}/group/${groupId}`, body);
     }
+
+    removeGroup(groupId: number) {
+        return this._http.delete(`${environment.API_URL}/group/${groupId}`);
+    }
 }

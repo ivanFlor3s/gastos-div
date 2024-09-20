@@ -17,9 +17,14 @@
                 </p>
             </div>
             <ng-container *ngIf="group.isAdmin">
-                <span
-                    (click)="edit($event)"
-                    class="fas fa-pen text-indigo-300 hover:text-indigo-500 relative z-10"></span>
+                <section id="admin-buttons" class="flex flex-row gap-1">
+                    <span
+                        (click)="edit($event)"
+                        class="fas fa-pen text-indigo-300 hover:text-indigo-500"></span>
+                    <span
+                        (click)="remove($event)"
+                        class="fas fa-trash text-red-300 hover:text-red-500"></span>
+                </section>
             </ng-container>
         </div>
         <div class="flex flex-row justify-between mt-auto">
