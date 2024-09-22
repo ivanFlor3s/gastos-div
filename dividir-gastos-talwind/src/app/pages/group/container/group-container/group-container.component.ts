@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GroupDetail } from '@app/interfaces/group.detail';
-import { GettingGroupError, GroupState, StartGettingGroup } from '@core/state';
+import {
+    GettingGroupError,
+    GroupState,
+    StartGettingGroup,
+    StartLeftGroup,
+} from '@core/state';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { AddSpentComponent } from '../../components';
 import { SpentItem } from '@app/models/dtos';
+import Swal from 'sweetalert2';
 
 @Component({
     selector: 'app-group-container',
@@ -20,14 +26,16 @@ export class GroupContainerComponent implements OnInit {
 
     @Select(GroupState.currentUserIsAdmin)
     currentUserIsAdmin$: Observable<boolean>;
+    idGroup: number;
 
     constructor(
         private store: Store,
         private activatedRoute: ActivatedRoute,
-        private modalService: NgbModal
+        private modalService: NgbModal,
+        private _router: Router
     ) {
         const { idGroup } = this.activatedRoute.snapshot.params;
-
+        this.idGroup = idGroup;
         this.store.dispatch(new StartGettingGroup(idGroup));
     }
 
@@ -36,4 +44,22 @@ export class GroupContainerComponent implements OnInit {
     }
 
     ngOnInit() {}
+
+    leaveGroup() {
+        Swal.fire({
+            title: '¿Desea abandonar el grupo?',
+            text: 'No podrás revertir esto',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, abandonar',
+            cancelButtonText: 'Cancelar',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.store.dispatch(new StartLeftGroup(this.idGroup));
+                this._router.navigate(['/dashboard']);
+            }
+        });
+    }
 }
