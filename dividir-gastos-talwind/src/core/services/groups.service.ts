@@ -46,4 +46,16 @@ export class GroupsService {
     removeGroup(groupId: number) {
         return this._http.delete(`${environment.API_URL}/group/${groupId}`);
     }
+
+    removeUserFromGroup(groupId: number, userId: number) {
+        return this._http.delete(
+            `${environment.API_URL}/group-user/group/${groupId}/user/${userId}`
+        );
+    }
+
+    leftGroup(groupId: number) {
+        return this._http.delete(
+            `${environment.API_URL}/group-user/group/${groupId}`
+        );
+    }
 }

@@ -15,6 +15,7 @@ import {
     StartGettingBasicGroup,
     StartGettingGroup,
     StartGettingGroups,
+    StartLeftGroup,
     StartRemoveGroup,
 } from './group.actions';
 import { finalize, take, tap } from 'rxjs';
@@ -327,6 +328,19 @@ export class GroupState {
             tap((_) => {
                 this._toastr.success('Grupo eliminado', '🎉');
                 ctx.dispatch(new StartGettingGroups(''));
+            })
+        );
+    }
+
+    @Action(StartLeftGroup)
+    startLeftGroup(
+        ctx: StateContext<GroupStateModel>,
+        { groupId }: StartLeftGroup
+    ) {
+        return this._groupService.leftGroup(groupId).pipe(
+            take(1),
+            tap((_) => {
+                this._toastr.success('Has salido del grupo', '🎉');
             })
         );
     }

@@ -66,3 +66,8 @@ export class StartRemoveGroup {
     static readonly type = '[Groups] StartRemoveGroup';
     constructor(public groupId: number) {}
 }
+
+export class StartLeftGroup {
+    static readonly type = '[Groups] StartLeftGroup';
+    constructor(public groupId: number) {}
+}
