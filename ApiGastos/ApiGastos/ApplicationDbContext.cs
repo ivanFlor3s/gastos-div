@@ -69,6 +69,7 @@ namespace ApiGastos
         public override int SaveChanges()
         {
             UpdateAuditFields();
+            UpdateSoftDeleteFields();
             return base.SaveChanges();
         }
 
@@ -107,6 +108,7 @@ namespace ApiGastos
                 .Where(e => e.Entity is SoftDeleteEntity && e.State == EntityState.Deleted);
             foreach (var entry in entries)
             {
+                entry.State = EntityState.Modified;
                 var softDeleteEntity = (SoftDeleteEntity)entry.Entity;
                 softDeleteEntity.IsDeleted = true;
                 softDeleteEntity.DeletedAt = DateTime.UtcNow;
