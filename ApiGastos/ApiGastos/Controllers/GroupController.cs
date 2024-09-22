@@ -72,6 +72,11 @@ namespace ApiGastos.Controllers
                 .OrderByDescending(group => group.CreatedAt)
                 .FirstOrDefaultAsync(groupDb => groupDb.Id == id);
 
+            if(group == null)
+            {
+                return NotFound();
+            }
+
             var result = mapper.Map<GroupResponse>(group);
 
             return Ok(result);
