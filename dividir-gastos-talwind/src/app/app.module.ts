@@ -37,7 +37,10 @@ import { ToastrModule } from 'ngx-toastr';
         BrowserAnimationsModule,
         FormsModule,
         SharedModule,
-        ErrorsModule.forRoot({ required: 'Este campo es requerido' }),
+        ErrorsModule.forRoot({
+            required: 'Este campo es requerido',
+            email: 'El email no es valido',
+        }),
         HttpClientModule,
         NgxsModule.forRoot([AppState, GroupState], {
             developmentMode: !environment.PRODUCTION,
