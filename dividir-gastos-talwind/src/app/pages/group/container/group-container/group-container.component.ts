@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GroupDetail } from '@app/interfaces/group.detail';
 import {
+    AppState,
     GettingGroupError,
     GroupState,
     StartGettingGroup,
@@ -10,7 +11,7 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { AddSpentComponent } from '../../components';
+import { AddSpentComponent, ManageGroupModalComponent } from '../../components';
 import { SpentItem } from '@app/models/dtos';
 import Swal from 'sweetalert2';
 
@@ -61,5 +62,18 @@ export class GroupContainerComponent implements OnInit {
                 this._router.navigate(['/dashboard']);
             }
         });
+    }
+
+    openManagePartitipantsModal() {
+        const modalRef = this.modalService.open(ManageGroupModalComponent);
+        const members = this.store
+            .selectSnapshot(GroupState.usersInDetail)
+            ?.filter((u) => u.id !== this.store.selectSnapshot(AppState.userId))
+            .map((u) => ({
+                name: u.isTemporal ? u.email : u.fullName,
+                value: u.id.toString(),
+            }));
+        modalRef.componentInstance.idGroup = this.idGroup;
+        modalRef.componentInstance.members = members;
     }
 }

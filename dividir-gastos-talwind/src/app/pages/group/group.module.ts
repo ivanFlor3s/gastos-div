@@ -7,12 +7,17 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { SharedModule } from '@app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ErrorsModule } from '@core/errors/errors.module';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+    NgbDatepickerModule,
+    NgbDropdownModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { ManageGroupModalComponent } from './components/manage-group-modal/manage-group-modal.component';
 
 @NgModule({
     imports: [
         CommonModule,
         GroupRoutingModule,
+        NgbDropdownModule,
         NgxSpinnerModule,
         SharedModule,
         ReactiveFormsModule,
@@ -23,12 +28,14 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
             maxLength: 'El texto es demasiado largo',
             max: 'Supera el monto maximo permitido',
             pattern: 'El formato no es correcto',
+            email: 'El email no es correcto',
         }),
     ],
     declarations: [
         GroupContainerComponent,
         ItemDetailComponent,
         AddSpentComponent,
+        ManageGroupModalComponent,
     ],
 })
 export class GroupModule {}
