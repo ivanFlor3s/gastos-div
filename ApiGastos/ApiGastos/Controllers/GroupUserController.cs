@@ -1,4 +1,6 @@
-﻿using ApiGastos.Helpers;
+﻿using ApiGastos.Dtos;
+using ApiGastos.Entities;
+using ApiGastos.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -55,6 +57,53 @@ namespace ApiGastos.Controllers
 
             return Ok();
         }
+
+        [HttpPut("group/{idGroup}")]
+        public async Task<IActionResult> Put(int idGroup, [FromBody] GroupMembersUpdateDto input)
+        {
+            var groupUsersDb = await context.GroupUsers
+                .Where(gu => gu.GroupId == idGroup)
+                .Include(gu => gu.AppUser)
+                .ToListAsync();
+
+            if (groupUsersDb.Count == 0)
+            {
+                return NotFound();
+            }
+
+
+
+            foreach (var userId in input.AddedUsers)
+            {
+                if (groupUsersDb.Any(gu => gu.AppUserId == userId))
+                {
+                    continue;
+                }
+
+                var groupUser = new GroupUser
+                {
+                    AppUserId = userId,
+                    GroupId = idGroup
+                };
+
+                context.GroupUsers.Add(groupUser);
+            }
+
+            foreach (var userId in input.DeletedUsers)
+            {
+                var groupUser = groupUsersDb.FirstOrDefault(gu => gu.AppUserId == userId);
+
+                if (groupUser == null)
+                {
+                    continue;
+                }
+
+                context.GroupUsers.Remove(groupUser);
+            }
+
+            await context.SaveChangesAsync();
+            return Ok();
+        }   
 
 
     }

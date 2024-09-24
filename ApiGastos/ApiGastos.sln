@@ -10,7 +10,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGastos.Core.Share", "ApiGastos.Core.Share\ApiGastos.Core.Share.csproj", "{5E176C01-B92D-43C2-AB21-197B2FCC899D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiGastos.Core.Share", "ApiGastos.Core.Share\ApiGastos.Core.Share.csproj", "{5E176C01-B92D-43C2-AB21-197B2FCC899D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divtos.Api", "Divtos.Api\Divtos.Api.csproj", "{D94FBEA6-A995-442F-9574-002DBE3AE313}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divtos.Infraestructure", "Divtos.Infraestructure\Divtos.Infraestructure.csproj", "{1E121E4C-9FEE-4A31-8102-1043D9F2E664}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divtos.Application", "Divtos.Application\Divtos.Application.csproj", "{50F7CC81-4D5B-45A5-B31C-AF8EABDCB99F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divtos.Domain", "Divtos.Domain\Divtos.Domain.csproj", "{D09C1470-9934-40A6-8054-FC0EC0BBB180}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divtos.Contracts", "Divtos.Contracts\Divtos.Contracts.csproj", "{C771E592-A0F0-4CD4-9CDC-33B8922E5597}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +36,26 @@ Global
 		{5E176C01-B92D-43C2-AB21-197B2FCC899D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E176C01-B92D-43C2-AB21-197B2FCC899D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E176C01-B92D-43C2-AB21-197B2FCC899D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D94FBEA6-A995-442F-9574-002DBE3AE313}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D94FBEA6-A995-442F-9574-002DBE3AE313}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D94FBEA6-A995-442F-9574-002DBE3AE313}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D94FBEA6-A995-442F-9574-002DBE3AE313}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E121E4C-9FEE-4A31-8102-1043D9F2E664}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E121E4C-9FEE-4A31-8102-1043D9F2E664}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E121E4C-9FEE-4A31-8102-1043D9F2E664}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E121E4C-9FEE-4A31-8102-1043D9F2E664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50F7CC81-4D5B-45A5-B31C-AF8EABDCB99F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50F7CC81-4D5B-45A5-B31C-AF8EABDCB99F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50F7CC81-4D5B-45A5-B31C-AF8EABDCB99F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50F7CC81-4D5B-45A5-B31C-AF8EABDCB99F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D09C1470-9934-40A6-8054-FC0EC0BBB180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D09C1470-9934-40A6-8054-FC0EC0BBB180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D09C1470-9934-40A6-8054-FC0EC0BBB180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D09C1470-9934-40A6-8054-FC0EC0BBB180}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C771E592-A0F0-4CD4-9CDC-33B8922E5597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C771E592-A0F0-4CD4-9CDC-33B8922E5597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C771E592-A0F0-4CD4-9CDC-33B8922E5597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C771E592-A0F0-4CD4-9CDC-33B8922E5597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
