@@ -1,4 +1,4 @@
-﻿using Divtos.Application.Authentication;
+﻿using Divtos.Application.Services.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Divtos.Application

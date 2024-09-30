@@ -1,4 +1,4 @@
-﻿using Divtos.Application.Authentication;
+﻿using Divtos.Application.Services.Authentication;
 using Divtos.Contracts.Authentication;
 using Microsoft.AspNetCore.Mvc;
 

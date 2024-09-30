@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Divtos.Application.Authentication
+namespace Divtos.Application.Services.Authentication
 {
     public record AuthenticationResult(
         Guid Id,
