@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Divtos.Application.Common.Interfaces.Authentication;
+using Divtos.Infraestructure.Authentication;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Divtos.Infraestructure
 {
@@ -6,6 +8,7 @@ namespace Divtos.Infraestructure
     {
         public static IServiceCollection AddInfraestructure(this IServiceCollection services)
         {
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
             return services;
         }
     }
