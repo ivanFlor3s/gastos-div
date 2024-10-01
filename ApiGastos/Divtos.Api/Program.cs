@@ -12,7 +12,7 @@ namespace Divtos.Api
                 // Add services to the container.
                 builder.Services
                     .AddApplication()
-                    .AddInfraestructure();
+                    .AddInfraestructure(builder.Configuration);
 
                 builder.Services.AddControllers();
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
