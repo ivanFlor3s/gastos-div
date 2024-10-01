@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Divtos.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Divtos.Application.Common.Interfaces.Authentication
 {
     public interface IJwtTokenGenerator
     {
-        string GenerateToken(string userId, string email, string name, string lastname, DateTime expires);
+        string GenerateToken(User user);
     }
 }

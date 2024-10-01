@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Options;
+using Divtos.Domain.Entities;
 
 namespace Divtos.Infraestructure.Authentication
 {
@@ -21,7 +22,7 @@ namespace Divtos.Infraestructure.Authentication
             _jwtSettings = jwtSettingsOptions.Value;
         }
 
-        public string GenerateToken(string userId, string email, string name, string lastname, DateTime expires)
+        public string GenerateToken(User user)
         {
             #pragma warning disable CS8604 // Possible null reference argument.
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
@@ -30,10 +31,10 @@ namespace Divtos.Infraestructure.Authentication
 
             var claims = new List<Claim>()
             {
-                new(ClaimTypes.NameIdentifier, userId),
-                new(ClaimTypes.Name, name),
-                new(ClaimTypes.Surname, lastname),
-                new(ClaimTypes.Email,email),
+                new(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new(ClaimTypes.Name, user.FirstName),
+                new(ClaimTypes.Surname, user.LastName),
+                new(ClaimTypes.Email,user.Email),
             };
 
             var securityToken = new JwtSecurityToken(
