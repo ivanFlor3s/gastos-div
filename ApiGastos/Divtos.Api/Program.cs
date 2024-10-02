@@ -1,3 +1,4 @@
+using Divtos.Api.Filters;
 using Divtos.Api.Middlewares;
 using Divtos.Application;
 using Divtos.Infraestructure;
@@ -15,7 +16,7 @@ namespace Divtos.Api
                     .AddApplication()
                     .AddInfraestructure(builder.Configuration);
 
-                builder.Services.AddControllers();
+                builder.Services.AddControllers( opts => opts.Filters.Add<ErrorHandlingFilterAttribute>());
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
@@ -31,7 +32,7 @@ namespace Divtos.Api
                     app.UseSwaggerUI();
                 }
 
-                app.UseMiddleware<ErrorHandlingManager>();
+                //app.UseMiddleware<ErrorHandlingManager>();
 
                 app.UseHttpsRedirection();
 
