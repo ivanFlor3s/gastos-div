@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using System.Net;
 
 namespace Divtos.Api.Filters
 {
@@ -8,10 +9,14 @@ namespace Divtos.Api.Filters
         public override void OnException(ExceptionContext context)
         {
             var exception = context.Exception;
-            context.Result = new ObjectResult(new { error = $"From Filter: {exception.Message}" })
+
+            var problemDetails = new ProblemDetails
             {
-                StatusCode = 500
+                Title = exception.Message,
+                Status = (int)HttpStatusCode.InternalServerError,
             };
+
+            context.Result = new ObjectResult(problemDetails);
 
             context.ExceptionHandled = true;
 
