@@ -1,3 +1,4 @@
+using Divtos.Api.Middlewares;
 using Divtos.Application;
 using Divtos.Infraestructure;
 
@@ -29,6 +30,8 @@ namespace Divtos.Api
                     app.UseSwagger();
                     app.UseSwaggerUI();
                 }
+
+                app.UseMiddleware<ErrorHandlingManager>();
 
                 app.UseHttpsRedirection();
 
