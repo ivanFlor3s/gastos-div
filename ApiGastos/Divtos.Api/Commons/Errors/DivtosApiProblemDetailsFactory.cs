@@ -4,9 +4,9 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
-namespace Divtos.Api.Errors
+namespace Divtos.Api.Commons.Errors
 {
-    public class DivtosApiProblemDetailsFactory: ProblemDetailsFactory
+    public class DivtosApiProblemDetailsFactory : ProblemDetailsFactory
     {
         private readonly ApiBehaviorOptions _options;
 
