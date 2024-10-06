@@ -1,4 +1,5 @@
-﻿using Divtos.Application.Common.Interfaces.Authentication;
+﻿using Divtos.Application.Authentication.Commons;
+using Divtos.Application.Common.Interfaces.Authentication;
 using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Domain.Commons.Errors;
 using Divtos.Domain.Entities;

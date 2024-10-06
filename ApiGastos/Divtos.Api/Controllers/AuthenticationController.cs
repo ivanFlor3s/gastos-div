@@ -1,8 +1,11 @@
-﻿using Divtos.Application.Services.Authentication;
+﻿using Divtos.Application.Authentication.Commands.Register;
+using Divtos.Application.Authentication.Commons;
+using Divtos.Application.Authentication.Queries.Login;
 using Divtos.Contracts.Authentication;
 using Divtos.Domain.Commons.Errors;
 using DivtosApi.Controllers;
 using ErrorOr;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Divtos.Api.Controllers
@@ -10,20 +13,24 @@ namespace Divtos.Api.Controllers
     [Route("api/v2/auth")]
     public class AuthenticationController : ApiBaseController
     {
-        private readonly IAuthenticationService _authenticationService;
-        public AuthenticationController(IAuthenticationService authenticationService)
+        private readonly ISender _mediator;
+
+        public AuthenticationController(ISender mediator)
         {
-            _authenticationService = authenticationService;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
-        public IActionResult Register(RegisterRequest request)
+        public async Task<IActionResult> Register(RegisterRequest request)
         {
-            ErrorOr<AuthenticationResult> authResult = _authenticationService.Register(
+            var command = new RegisterCommand(
                 request.FirstName,
                 request.LastName,
                 request.Email,
                 request.Password);
+
+
+            ErrorOr<AuthenticationResult> authResult = await _mediator.Send(command);
 
             return authResult.Match(
                 authResult => Ok(MapAuthResult(authResult)),
@@ -42,9 +49,10 @@ namespace Divtos.Api.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(LoginRequest request)
+        public async Task<IActionResult> Login(LoginRequest request)
         {
-            ErrorOr<AuthenticationResult> authResult = _authenticationService.Login(request.Email, request.Password);
+            var query = new LoginQuery(request.Email, request.Password);
+            var authResult = await _mediator.Send(query);
 
             if(authResult.IsError && authResult.FirstError == Errors.Authentication.InvalidCredentials)
             {
