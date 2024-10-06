@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using ErrorOr;
+using Divtos.Api.Commons.Constants.Http;
 
 namespace Divtos.Api.Commons.Errors
 {
@@ -89,7 +91,13 @@ namespace Divtos.Api.Commons.Errors
             {
                 problemDetails.Extensions["traceId"] = traceId;
             }
-            problemDetails.Extensions.Add("altos-problemas", true);
+
+            var errors = httpContext?.Items[HttpContextItemKeys.Errors] as List<Error>;
+            if (errors is not null)
+            {
+                problemDetails.Extensions.Add("errorsCodes", errors.Select(e => e.Code));
+            }
+            problemDetails.Extensions.Add("altosProblemas", true);
         }
 
     }

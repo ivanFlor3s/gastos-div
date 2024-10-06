@@ -1,6 +1,4 @@
 using Divtos.Api.Commons.Errors;
-using Divtos.Api.Filters;
-using Divtos.Api.Middlewares;
 using Divtos.Application;
 using Divtos.Infraestructure;
 using Microsoft.AspNetCore.Mvc.Infrastructure;

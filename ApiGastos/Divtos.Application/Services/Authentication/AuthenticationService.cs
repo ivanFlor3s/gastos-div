@@ -1,6 +1,8 @@
 ﻿using Divtos.Application.Common.Interfaces.Authentication;
 using Divtos.Application.Common.Interfaces.Persistence;
+using Divtos.Domain.Commons.Errors;
 using Divtos.Domain.Entities;
+using ErrorOr;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,18 +22,18 @@ namespace Divtos.Application.Services.Authentication
             _userRepository = userRepository;
         }
 
-        public AuthenticationResult Login(string email, string password)
+        public ErrorOr<AuthenticationResult> Login(string email, string password)
         {
             // Check user exists
             if(_userRepository.GetByEmail(email) is not User user)
             {
-                throw new Exception("User not found");
+                return Errors.User.DuplicateEmail;
             }
 
             // Check password
             if(user.Password != password)
             {
-                throw new Exception("Invalid password");
+                return Errors.Authentication.InvalidCredentials;
             }
 
             // Create token
@@ -42,12 +44,12 @@ namespace Divtos.Application.Services.Authentication
                 token);
         }
 
-        public AuthenticationResult Register(string firstName, string lastName, string email, string password)
+        public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
         {
             //check user exists
             if (_userRepository.GetByEmail(email) is not null)
             {
-                throw new Exception("User already exists");
+                return Errors.User.DuplicateEmail;
             }
 
             // create user
