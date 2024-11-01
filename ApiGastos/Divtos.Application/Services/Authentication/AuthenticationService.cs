@@ -23,10 +23,10 @@ namespace Divtos.Application.Services.Authentication
             _userRepository = userRepository;
         }
 
-        public ErrorOr<AuthenticationResult> Login(string email, string password)
+        public async Task<ErrorOr<AuthenticationResult>> Login(string email, string password)
         {
             // Check user exists
-            if(_userRepository.GetByEmail(email) is not User user)
+            if(await _userRepository.GetByEmailAsync(email) is not User user)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -48,7 +48,7 @@ namespace Divtos.Application.Services.Authentication
         public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
         {
             //check user exists
-            if (_userRepository.GetByEmail(email) is not null)
+            if (_userRepository.GetByEmailAsync(email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -61,7 +61,6 @@ namespace Divtos.Application.Services.Authentication
                 LastName = lastName,
                 Password = password
             };
-            _userRepository.Add(user);
 
             // create token
             var token = _jwtTokenGenerator.GenerateToken(user);

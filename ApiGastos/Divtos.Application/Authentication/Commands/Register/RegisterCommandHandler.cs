@@ -5,11 +5,6 @@ using Divtos.Domain.Commons.Errors;
 using Divtos.Domain.Entities;
 using ErrorOr;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Divtos.Application.Authentication.Commands.Register
 {
@@ -27,7 +22,7 @@ namespace Divtos.Application.Authentication.Commands.Register
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
             //check user exists
-            if (_userRepository.GetByEmail(command.Email) is not null)
+            if (_userRepository.GetByEmailAsync(command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -38,9 +33,9 @@ namespace Divtos.Application.Authentication.Commands.Register
                 Email = command.Email,
                 FirstName = command.FirstName,
                 LastName = command.LastName,
-                Password = command.Password
+                Password = command.Password,
             };
-            _userRepository.Add(user);
+            await _userRepository.AddAsync(user);
 
             // create token
             var token = _jwtTokenGenerator.GenerateToken(user);

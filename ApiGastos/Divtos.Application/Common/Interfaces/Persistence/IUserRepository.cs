@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace Divtos.Application.Common.Interfaces.Persistence
 {
-    public interface IUserRepository
+    public interface IUserRepository : IRepository<User>
     {
-        User? GetByEmail(string email);
-        Task<User> GetById(Guid id);
-        void Add(User user);
+        Task<User?> GetByEmailAsync(string email);
     }
 }

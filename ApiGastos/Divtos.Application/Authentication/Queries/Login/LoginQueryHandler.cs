@@ -10,23 +10,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static Divtos.Domain.Commons.Errors.Errors;
 
 namespace Divtos.Application.Authentication.Queries.Login
 {
     public class LoginQueryHandler : IRequestHandler<LoginQuery, ErrorOr<AuthenticationResult>>
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public LoginQueryHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+
+        public LoginQueryHandler(IUnitOfWork unitOfWork, IJwtTokenGenerator jwtTokenGenerator)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
             _jwtTokenGenerator = jwtTokenGenerator;
         }
         public async Task<ErrorOr<AuthenticationResult>> Handle(LoginQuery query, CancellationToken cancellationToken)
         {
             // Check user exists
-            if (_userRepository.GetByEmail(query.Email) is not User user)
+            if (await _unitOfWork.Users.GetByEmailAsync(query.Email) is not Domain.Entities.User user)
             {
                 return Errors.Authentication.UserNotFound;
             }
