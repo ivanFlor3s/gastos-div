@@ -37,6 +37,7 @@ namespace Divtos.Application.Authentication.Commands.Register
                 Password = command.Password,
             };
             await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.CompleteAsync();
 
             // create token
             var token = _jwtTokenGenerator.GenerateToken(user);
