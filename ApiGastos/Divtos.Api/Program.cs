@@ -16,6 +16,7 @@ namespace Divtos.Api
                     .AddApplication()
                     .AddInfraestructure(builder.Configuration);
 
+                builder.Services.AddHttpContextAccessor();
                 builder.Services.AddSingleton<ProblemDetailsFactory, DivtosApiProblemDetailsFactory>();
                 builder.Services.AddControllers();
                 builder.Services.AddEndpointsApiExplorer();

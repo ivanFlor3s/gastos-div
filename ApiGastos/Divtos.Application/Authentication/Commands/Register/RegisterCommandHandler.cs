@@ -11,18 +11,19 @@ namespace Divtos.Application.Authentication.Commands.Register
     public class RegisterCommandHandler : IRequestHandler<RegisterCommand, ErrorOr<AuthenticationResult>>
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
             _jwtTokenGenerator = jwtTokenGenerator;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
         {
             //check user exists
-            if (_userRepository.GetByEmailAsync(command.Email) is not null)
+            if (await _unitOfWork.Users.GetByEmailAsync(command.Email) is not null)
             {
                 return Errors.User.DuplicateEmail;
             }
@@ -35,7 +36,7 @@ namespace Divtos.Application.Authentication.Commands.Register
                 LastName = command.LastName,
                 Password = command.Password,
             };
-            await _userRepository.AddAsync(user);
+            await _unitOfWork.Users.AddAsync(user);
 
             // create token
             var token = _jwtTokenGenerator.GenerateToken(user);
