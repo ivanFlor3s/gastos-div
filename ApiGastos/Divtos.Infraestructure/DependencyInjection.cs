@@ -22,7 +22,7 @@ namespace Divtos.Infraestructure
 
        private static IServiceCollection AddPersistence(this IServiceCollection services)
         {
-            services.AddDbContext<AppDbContext>(options => options.UseNpgsql("Host=localhost;Database=gastos_db;Port=5432;Username=postgres;Password=789963"));
+            services.AddDbContext<AppDbContext>(options => options.UseNpgsql("Host=localhost;Database=divtos;Port=5432;Username=postgres;Password=789963"));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             return services;    
