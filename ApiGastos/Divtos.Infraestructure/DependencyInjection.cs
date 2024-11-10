@@ -3,6 +3,7 @@ using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Infraestructure.Authentication;
 using Divtos.Infraestructure.Common.Persistence;
 using Divtos.Infraestructure.Users.Persistence;
+using Divtos.Infraestructure.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,7 +16,7 @@ namespace Divtos.Infraestructure
         {
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-
+            services.AddSingleton<IPasswordService, PasswordService>();
             services.AddPersistence();
             return services;
         }

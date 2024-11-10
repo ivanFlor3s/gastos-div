@@ -12,12 +12,13 @@ namespace Divtos.Application.Authentication.Commands.Register
     {
         private readonly IJwtTokenGenerator _jwtTokenGenerator;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IPasswordService _passwordService;
 
-
-        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUnitOfWork unitOfWork)
+        public RegisterCommandHandler(IJwtTokenGenerator jwtTokenGenerator, IUnitOfWork unitOfWork, IPasswordService passwordService)
         {
             _jwtTokenGenerator = jwtTokenGenerator;
             _unitOfWork = unitOfWork;
+            _passwordService = passwordService;
         }
 
         public async Task<ErrorOr<AuthenticationResult>> Handle(RegisterCommand command, CancellationToken cancellationToken)
@@ -34,8 +35,9 @@ namespace Divtos.Application.Authentication.Commands.Register
                 Email = command.Email,
                 FirstName = command.FirstName,
                 LastName = command.LastName,
-                Password = command.Password,
+                PasswordHash = _passwordService.HashPassword(command.Password)
             };
+
             await _unitOfWork.Users.AddAsync(user);
             await _unitOfWork.CompleteAsync();
 
