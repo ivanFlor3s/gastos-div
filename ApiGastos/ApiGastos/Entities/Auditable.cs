@@ -1,6 +1,6 @@
 ﻿namespace ApiGastos.Entities
 {
-    public abstract class Auditable
+    public abstract class Auditable: SoftDeleteEntity
     {
         public DateTime CreatedAt { get; set; }
         public DateTime? LastModified { get; set; }

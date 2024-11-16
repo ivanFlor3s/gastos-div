@@ -32,10 +32,7 @@ namespace Divtos.Application.Services.Authentication
             }
 
             // Check password
-            if(user.Password != password)
-            {
-                return Errors.Authentication.InvalidCredentials;
-            }
+           
 
             // Create token
             var token = _jwtTokenGenerator.GenerateToken(user);
@@ -45,27 +42,6 @@ namespace Divtos.Application.Services.Authentication
                 token);
         }
 
-        public ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password)
-        {
-            //check user exists
-            if (_userRepository.GetByEmailAsync(email) is not null)
-            {
-                return Errors.User.DuplicateEmail;
-            }
-
-            // create user
-            var user = new User
-            {
-                Email = email,
-                FirstName = firstName,
-                LastName = lastName,
-                Password = password
-            };
-
-            // create token
-            var token = _jwtTokenGenerator.GenerateToken(user);
-
-            return new AuthenticationResult(user, token);
-        }
+       
     }
 }

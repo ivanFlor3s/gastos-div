@@ -11,6 +11,6 @@ namespace Divtos.Application.Services.Authentication
     public interface IAuthenticationService
     {
         Task<ErrorOr<AuthenticationResult>> Login(string email, string password);
-        ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password);
+        //ErrorOr<AuthenticationResult> Register(string firstName, string lastName, string email, string password);
     }
 }
