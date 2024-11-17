@@ -1,4 +1,5 @@
 ﻿using Divtos.Application.Groups;
+using Divtos.Application.Groups.Commands.Create;
 using Divtos.Contracts.Groups;
 using DivtosApi.Controllers;
 using MediatR;
