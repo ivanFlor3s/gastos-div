@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Divtos.Application.Common.Interfaces.Persistence
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<User, Guid>
     {
         Task<User?> GetByEmailAsync(string email);
     }

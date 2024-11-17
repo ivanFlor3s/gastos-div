@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Divtos.Infraestructure.Common.Persistence
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class Repository<TEntity, TKey> : IRepository<TEntity,TKey> where TEntity : class
     {
         protected readonly AppDbContext _dbContext;
         protected readonly DbSet<TEntity> _dbSet;
@@ -14,7 +14,7 @@ namespace Divtos.Infraestructure.Common.Persistence
             _dbSet = _dbContext.Set<TEntity>();
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(TKey id)
         {
             var result = await _dbSet.FindAsync(id);
             return result;

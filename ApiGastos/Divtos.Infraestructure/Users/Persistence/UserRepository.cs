@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Divtos.Infraestructure.Users.Persistence
 {
-    public class UserRepository :  Repository<User>, IUserRepository
+    public class UserRepository : Repository<User, Guid>, IUserRepository
     {
         public UserRepository(AppDbContext dbContext) : base(dbContext)
         {

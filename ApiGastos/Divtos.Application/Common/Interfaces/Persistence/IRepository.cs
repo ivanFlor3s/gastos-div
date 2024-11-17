@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Divtos.Application.Common.Interfaces.Persistence
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T, TKey> where T : class
     {
-        Task<T?> GetByIdAsync(int id);
+        Task<T?> GetByIdAsync(TKey id);
         Task<IEnumerable<T>> GetAllAsync();
         Task AddAsync(T entity);
         void Update(T entity);

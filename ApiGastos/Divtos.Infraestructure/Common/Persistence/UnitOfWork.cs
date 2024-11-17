@@ -1,4 +1,5 @@
 ﻿using Divtos.Application.Common.Interfaces.Persistence;
+using Divtos.Infraestructure.Groups.Persistance;
 using Divtos.Infraestructure.Users.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,12 +13,14 @@ namespace Divtos.Infraestructure.Common.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         public IUserRepository Users { get; private set; }
+        public IGroupRepository Groups { get; private set; }
         private readonly AppDbContext _context;
 
         public UnitOfWork(AppDbContext context)
         {
             _context = context;
             Users = new UserRepository(_context);
+            Groups = new GroupRepository(_context);
         }
 
 
