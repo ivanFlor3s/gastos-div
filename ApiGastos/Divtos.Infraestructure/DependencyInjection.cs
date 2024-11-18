@@ -2,8 +2,10 @@
 using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Infraestructure.Authentication;
 using Divtos.Infraestructure.Common.Persistence;
+using Divtos.Infraestructure.Security;
 using Divtos.Infraestructure.Users.Persistence;
 using Divtos.Infraestructure.Utils;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,12 +14,15 @@ namespace Divtos.Infraestructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfraestructure(this IServiceCollection services, ConfigurationManager configuration)
+        public static IServiceCollection AddInfraestructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
-            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-            services.AddSingleton<IPasswordService, PasswordService>();
-            services.AddPersistence();
+
+
+            services
+                .AddPersistence()
+                .AddServices()
+                .AddAuthentication(configuration);
+
             return services;
         }
 
@@ -27,6 +32,25 @@ namespace Divtos.Infraestructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserRepository, UserRepository>();
             return services;    
+        }
+
+        private static IServiceCollection AddServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IPasswordService, PasswordService>();
+            return services;
+        }
+
+        private static IServiceCollection AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+            services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
+            Console.WriteLine("AddAuthentication configured");
+            services
+                .ConfigureOptions<JwtBearerTokenValidationConfiguration>()
+                .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer();
+
+            return services;
         }
     }
 }
