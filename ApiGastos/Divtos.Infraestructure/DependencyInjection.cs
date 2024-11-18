@@ -44,7 +44,6 @@ namespace Divtos.Infraestructure
         {
             services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
             services.AddSingleton<IJwtTokenGenerator, JwtTokenGenerator>();
-            Console.WriteLine("AddAuthentication configured");
             services
                 .ConfigureOptions<JwtBearerTokenValidationConfiguration>()
                 .AddAuthentication(defaultScheme: JwtBearerDefaults.AuthenticationScheme)

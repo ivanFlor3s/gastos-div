@@ -35,39 +35,40 @@ namespace Divtos.Infraestructure.Security
 
             options.Events = new JwtBearerEvents
             {
+                OnMessageReceived = context =>
+                {
+                    // Inspeccionar el token recibido
+                    var token = context.Token;
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        Console.WriteLine("Token not found in the request.");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Token received: {token}");
+                    }
+                    return Task.CompletedTask;
+                },
                 OnAuthenticationFailed = context =>
                 {
-                    if (context.Exception is SecurityTokenExpiredException)
-                    {
-                        context.Response.StatusCode = 401; // Unauthorized
-                        context.Response.ContentType = "application/json";
-
-                        // Mensaje detallado
-                        var result = System.Text.Json.JsonSerializer.Serialize(new
-                        {
-                            error = "Token expired",
-                            message = "The provided token has expired. Please login again."
-                        });
-
-                        return context.Response.WriteAsync(result);
-                    }
-
+                    // Inspeccionar la excepción de autenticación
+                    Console.WriteLine($"Authentication failed: {context.Exception?.Message}");
+                    return Task.CompletedTask;
+                },
+                OnTokenValidated = context =>
+                {
+                    // Inspeccionar el usuario autenticado
+                    Console.WriteLine($"Token validated successfully for user: {context.Principal?.Identity?.Name}");
                     return Task.CompletedTask;
                 },
                 OnChallenge = context =>
                 {
-                    context.Response.StatusCode = 401; // Unauthorized
-                    context.Response.ContentType = "application/json";
-
-                    var result = System.Text.Json.JsonSerializer.Serialize(new
-                    {
-                        error = "Invalid token",
-                        message = "Authentication failed due to an invalid or missing token."
-                    });
-
-                    return context.Response.WriteAsync(result);
+                    // Inspeccionar por qué se emitió un challenge
+                    Console.WriteLine($"Challenge triggered: {context.AuthenticateFailure?.Message}");
+                    return Task.CompletedTask;
                 }
             };
         }
     }
 }
+ 
