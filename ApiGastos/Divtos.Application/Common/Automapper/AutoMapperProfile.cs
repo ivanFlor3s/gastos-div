@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Divtos.Application.Groups.Commands.Create;
+using Divtos.Application.Groups.Commons;
 using Divtos.Domain.Entities;
 
 namespace Divtos.Application.Common.Automapper
@@ -9,6 +10,7 @@ namespace Divtos.Application.Common.Automapper
         public AutoMapperProfile()
         {
             CreateMap<CreateGroupCommand, Group>();
+            CreateMap<Group, GroupDetailResult>();
         }
     }
 }

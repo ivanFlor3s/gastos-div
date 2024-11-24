@@ -1,5 +1,6 @@
 ﻿using Divtos.Application.Groups;
 using Divtos.Application.Groups.Commands.Create;
+using Divtos.Application.Groups.Queries.GetDetail;
 using Divtos.Contracts.Groups;
 using DivtosApi.Controllers;
 using MediatR;
@@ -28,6 +29,17 @@ namespace Divtos.Api.Controllers
                                                  request.Emails);
 
             var result = await _mediator.Send(command);
+
+            return result.Match(
+                result => Ok(result),
+                errors => Problem(errors));
+        }
+        
+        [HttpGet("{idGroup}")]
+        public async Task<IActionResult> GetGroup(int idGroup)
+        {
+            var query = new GetDetailQuery(idGroup);
+            var result = await _mediator.Send(query);
 
             return result.Match(
                 result => Ok(result),

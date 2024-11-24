@@ -3,11 +3,6 @@ using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Domain.Entities;
 using ErrorOr;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Divtos.Application.Common.Interfaces.Authentication;
 
 namespace Divtos.Application.Groups.Commands.Create
@@ -33,7 +28,7 @@ namespace Divtos.Application.Groups.Commands.Create
             var currentUser = _currentUserProvider.GetCurrentUser();
             group.GroupUsers = new List<GroupUser>()
             {
-                new GroupUser() { UserId = currentUser.Id, IsAdmin = true }
+                new() { UserId = currentUser.Id, IsAdmin = true }
             };
             await _unitOfWork.Groups.AddAsync(group);
             await _unitOfWork.CompleteAsync();

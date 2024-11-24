@@ -2,10 +2,8 @@
 using Divtos.Application.Common.Interfaces.Authentication;
 using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Domain.Commons.Errors;
-using Divtos.Domain.Entities;
 using ErrorOr;
 using MediatR;
-using static Divtos.Domain.Commons.Errors.Errors;
 
 namespace Divtos.Application.Authentication.Queries.Login
 {
