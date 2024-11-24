@@ -3,6 +3,7 @@ using Divtos.Application.Common.Interfaces.Persistence;
 using Divtos.Infraestructure.Authentication;
 using Divtos.Infraestructure.Common.Persistence;
 using Divtos.Infraestructure.Security;
+using Divtos.Infraestructure.Security.CurrentUserProvider;
 using Divtos.Infraestructure.Users.Persistence;
 using Divtos.Infraestructure.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -37,6 +38,7 @@ namespace Divtos.Infraestructure
         private static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddSingleton<IPasswordService, PasswordService>();
+            services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
             return services;
         }
 
