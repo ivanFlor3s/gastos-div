@@ -1,5 +1,6 @@
 ﻿using Divtos.Application.Groups;
 using Divtos.Application.Groups.Commands.Create;
+using Divtos.Application.Groups.Queries.GetAll;
 using Divtos.Application.Groups.Queries.GetDetail;
 using Divtos.Contracts.Groups;
 using DivtosApi.Controllers;
@@ -46,5 +47,15 @@ namespace Divtos.Api.Controllers
                 errors => Problem(errors));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetGroups()
+        {
+            var query = new GetAllQuery();
+            var result = await _mediator.Send(query);
+            
+            return result.Match(
+                result => Ok(result),
+                errors => Problem(errors));
+        }
     }
 }

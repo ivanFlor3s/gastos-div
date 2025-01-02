@@ -20,6 +20,8 @@ namespace Divtos.Infraestructure.Groups.Persistance
                 
             return query;
         }
+        
+        
 
         public IQueryable<Group?> GetDetail(int idGroup)
         {
@@ -40,6 +42,12 @@ namespace Divtos.Infraestructure.Groups.Persistance
         {
             var group = await GetDetail(idGroup).FirstOrDefaultAsync();
             return group;
+        }
+
+        public async Task<IList<Group>> GetAllAsync()
+        {
+            var query = GetAll();
+            return await query.ToListAsync();
         }
     }
 }
